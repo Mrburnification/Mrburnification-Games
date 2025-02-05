@@ -47,12 +47,19 @@ function logLoginData(data) {
   
     fetch(scriptUrl, {
       method: "POST",
-      mode: "no-cors", // Add this line
       body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" }
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
-    .then(() => {
-      console.log("Login data logged (no response due to no-cors)");
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then(result => {
+      console.log("Login data logged:", result);
       window.location.href = "pages/menu.html"; // Redirect after logging
     })
     .catch(error => {
@@ -60,3 +67,4 @@ function logLoginData(data) {
       alert("Failed to log data. Check console for details.");
     });
   }
+  
