@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - CyberGame Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="../assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="cyber-grid"></div>
+
+    <nav class="navbar">
+        <div class="logo cyber-font">CYBERHUB</div>
+        <div class="nav-icons">
+            <div class="nav-item">
+                <i class="fas fa-user-astronaut nav-icon" onclick="showModal('settings')"></i>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-chart-column nav-icon" onclick="showModal('analytics')"></i>
+                <span class="nav-label">Analytics</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-users nav-icon" onclick="showModal('friends')"></i>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-terminal nav-icon" onclick="showModal('readme')"></i>
+                <span class="nav-label">Docs</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="game-grid">
+        <div class="game-card">
+            <img src="../assets/images/game1-thumbnail.png" class="game-image" alt="Neon Invasion Thumbnail">
+            <img src="../assets/gifs/game-preview.gif" class="game-gif" alt="Game Preview">
+            <div class="game-info">
+                <h3 class="game-title cyber-font">NEON INVASION</h3>
+                <p class="game-description">Defend the cyber-grid against rogue AI entities.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-footer">
+        <a href="../pages/readme.html" class="nav-item">
+            <i class="fas fa-file-code nav-icon"></i>
+            <span class="nav-label">Readme</span>
+        </a>
+        <a href="../pages/contact.html" class="nav-item">
+            <i class="fas fa-envelope nav-icon"></i>
+            <span class="nav-label">Contact</span>
+        </a>
+    </div>
+
+    <script src="../assets/js/matrixEffect.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/analytics.js"></script>
+    <script src="../assets/js/googleSheets.js"></script>
+</body>
+</html>
