@@ -38,34 +38,18 @@ function skipLogin() {
 function logLoginData(data) {
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyV1MQXcB79yRGbBtD_d_7IXU5LOCSegwuFwfQfcy-fytb3KtC-z8lVH4qEEps1YTjD7A/exec";
     
-    // Don't redirect immediately - wait for the fetch to complete
-    return fetch(scriptUrl, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-            "Content-Type": "application/json",
-            // Add additional CORS headers
-            "Accept": "application/json"
-        },
-        // Prevent redirect until data is logged
-        redirect: "follow",
-        body: JSON.stringify(data)
+    fetch(scriptUrl, {
+      method: "POST",
+      mode: "no-cors", // Bypass CORS preflight
+      headers: { "Content-Type": "text/plain" }, // Avoid triggering preflight
+      body: JSON.stringify(data)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(result => {
-        console.log("Login data logged successfully:", result);
-        // Only redirect after successful logging
-        window.location.href = "pages/menu.html";
+    .then(() => {
+      console.log("Login data logged successfully");
+      window.location.href = "pages/menu.html";
     })
     .catch(error => {
-        console.error("Error logging data:", error);
-        alert("Failed to log data: " + error.message);
-        // You might still want to redirect on error, depending on your requirements
-        // window.location.href = "pages/menu.html";
+      console.error("Error logging data:", error);
+      alert("Failed to log data. Check console for details.");
     });
 }
