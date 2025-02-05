@@ -44,27 +44,25 @@ function skipLogin() {
 
 function logLoginData(data) {
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyV1MQXcB79yRGbBtD_d_7IXU5LOCSegwuFwfQfcy-fytb3KtC-z8lVH4qEEps1YTjD7A/exec";
-  
+    
     fetch(scriptUrl, {
       method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
+      mode: "cors", // Ensure cross-origin requests work
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data) // Convert data to JSON
     })
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      return response.text();
+      return response.json(); // Parse the response as JSON
     })
     .then(result => {
-      console.log("Login data logged:", result);
-      window.location.href = "pages/menu.html"; // Redirect after logging
+      console.log("Login data logged successfully:", result);
+      window.location.href = "pages/menu.html"; // Redirect after success
     })
     .catch(error => {
       console.error("Error logging data:", error);
       alert("Failed to log data. Check console for details.");
     });
   }
-  
