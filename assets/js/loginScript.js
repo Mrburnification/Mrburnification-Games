@@ -43,17 +43,20 @@ function skipLogin() {
 }
 
 function logLoginData(data) {
-    // Replace with your Google Apps Script URL
     const scriptUrl = "https://script.google.com/macros/s/AKfycbyV1MQXcB79yRGbBtD_d_7IXU5LOCSegwuFwfQfcy-fytb3KtC-z8lVH4qEEps1YTjD7A/exec";
-
+  
     fetch(scriptUrl, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json"
-        }
+      method: "POST",
+      mode: "no-cors", // Add this line
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" }
     })
-    .then(response => response.text())
-    .then(result => console.log("Login data logged:", result))
-    .catch(error => console.error("Error logging data:", error));
-}
+    .then(() => {
+      console.log("Login data logged (no response due to no-cors)");
+      window.location.href = "pages/menu.html"; // Redirect after logging
+    })
+    .catch(error => {
+      console.error("Error logging data:", error);
+      alert("Failed to log data. Check console for details.");
+    });
+  }
