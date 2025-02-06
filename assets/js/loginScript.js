@@ -41,7 +41,7 @@ function skipLogin() {
 }
 
 function logLoginData(data) {
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbwScHvZuGY4ZGG-WSBWicapjMKyNQbZhaiGSs8iefv8o-DtvUjSMU8TtY55WBmhkXKmzw/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyHpG5bGc0IJPRfWnOnQ4sB2pSnMMSJQFfyolzhubRib4oe6GnWf_sIh32iF7WJ7Kh3XQ/exec";
     
     fetch(scriptUrl, {
         method: "POST",
