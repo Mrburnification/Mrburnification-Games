@@ -1,24 +1,14 @@
 function handleCredentialResponse(response) {
-    const data = JSON.parse(atob(response.credential.split(".")[1]));
-    alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nPicture URL: ${data.picture}\nLocale: ${data.locale}`);
+    console.log("Google Credential Response:", response); // Add this line
     try {
-        // Decode the JWT token to get user data
-        // const data = JSON.parse(atob(response.credential.split(".")[1]));
-
-        // Display the user data in a popup for testing
-        alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nPicture URL: ${data.picture}\nLocale: ${data.locale}`);
-
-        // Store user data in localStorage (optional for now)
-        localStorage.setItem("playerEmail", data.email);
-        localStorage.setItem("playerName", data.name);
-        localStorage.setItem("playerPicture", data.picture);
-        localStorage.setItem("playerLocale", data.locale);
-        localStorage.setItem("loginTime", new Date().toISOString());
+        const data = JSON.parse(atob(response.credential.split(".")[1]));
+        alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}`);
     } catch (error) {
         console.error("Error handling credential response:", error);
-        alert("Failed to decode login response. Check console for details.");
+        alert("Failed to decode login response.");
     }
 }
+
 
 
 function skipLogin() {
