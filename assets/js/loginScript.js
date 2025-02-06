@@ -2,7 +2,7 @@ function handleCredentialResponse(response) {
     console.log("Google Credential Response:", response);
     try {
         const data = JSON.parse(atob(response.credential.split(".")[1]));
-        const locale = data.locale ? data.locale : "N/A"; // Default to "N/A" if locale is missing
+        const locale = data.locale || "N/A";  // Default to "N/A" if locale is missing
 
         alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nLocale: ${locale}`);
 
@@ -21,9 +21,6 @@ function handleCredentialResponse(response) {
         alert("Failed to decode login response.");
     }
 }
-
-
-
 
 function skipLogin() {
     // Store guest data
@@ -57,7 +54,8 @@ function logLoginData(data) {
         
         // Clean up the script tag and callback function after it executes
         delete window[callbackName];
-        document.body.removeChild(script);
+        const script = document.getElementById(callbackName);
+        if (script) document.body.removeChild(script);
     };
 
     // Build the full URL with query parameters for JSONP
@@ -68,6 +66,7 @@ function logLoginData(data) {
 
     // Create the <script> element
     const script = document.createElement("script");
+    script.id = callbackName;  // Assign an ID for easy cleanup
     script.src = `${scriptUrl}?${queryParams.toString()}`;
     document.body.appendChild(script);  // Add the script to the DOM
 }
