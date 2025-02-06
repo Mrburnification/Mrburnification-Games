@@ -1,7 +1,9 @@
 function handleCredentialResponse(response) {
+    const data = JSON.parse(atob(response.credential.split(".")[1]));
+    alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nPicture URL: ${data.picture}\nLocale: ${data.locale}`);
     try {
         // Decode the JWT token to get user data
-        const data = JSON.parse(atob(response.credential.split(".")[1]));
+        // const data = JSON.parse(atob(response.credential.split(".")[1]));
 
         // Display the user data in a popup for testing
         alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nPicture URL: ${data.picture}\nLocale: ${data.locale}`);
