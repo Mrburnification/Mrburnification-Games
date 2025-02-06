@@ -41,20 +41,33 @@ function skipLogin() {
 }
 
 function logLoginData(data) {
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyHpG5bGc0IJPRfWnOnQ4sB2pSnMMSJQFfyolzhubRib4oe6GnWf_sIh32iF7WJ7Kh3XQ/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyPG4E-X0fY6ZNFmHjgfMAcEAj6qwTlg3M2RS-aCYMlZEvFXWZ6KSvP3mbuOdYrzDaT9w/exec";
     
-    fetch(scriptUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())  // Expect a JSON response
-    .then(result => {
-        console.log("Login data logged successfully:", result);
-        window.location.href = "pages/menu.html";
-    })
-    .catch(error => {
-        console.error("Error logging data:", error);
-        alert("Failed to log data. Check console for details.");
+    // Create a unique callback function name
+    const callbackName = `callback_${Date.now()}`;
+    
+    // Attach the callback function to the window object
+    window[callbackName] = function(response) {
+        console.log("Login data logged successfully:", response);
+        if (response.status === "success") {
+            window.location.href = "pages/menu.html";  // Redirect on success
+        } else {
+            alert(`Failed to log data: ${response.message}`);
+        }
+        
+        // Clean up the script tag and callback function after it executes
+        delete window[callbackName];
+        document.body.removeChild(script);
+    };
+
+    // Build the full URL with query parameters for JSONP
+    const queryParams = new URLSearchParams({
+        ...data,
+        callback: callbackName
     });
+
+    // Create the <script> element
+    const script = document.createElement("script");
+    script.src = `${scriptUrl}?${queryParams.toString()}`;
+    document.body.appendChild(script);  // Add the script to the DOM
 }
