@@ -1,24 +1,23 @@
 function handleCredentialResponse(response) {
-    // Decode the JWT token to get user data
-    const data = JSON.parse(atob(response.credential.split(".")[1]));
+    try {
+        // Decode the JWT token to get user data
+        const data = JSON.parse(atob(response.credential.split(".")[1]));
 
-    // Store user data in localStorage
-    localStorage.setItem("playerEmail", data.email);
-    localStorage.setItem("playerName", data.name);
-    localStorage.setItem("playerPicture", data.picture);
-    localStorage.setItem("playerLocale", data.locale);
-    localStorage.setItem("loginTime", new Date().toISOString());
+        // Display the user data in a popup for testing
+        alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nPicture URL: ${data.picture}\nLocale: ${data.locale}`);
 
-    // Send login data to Google Sheets
-    logLoginData({
-        email: data.email,
-        name: data.name,
-        picture: data.picture,
-        locale: data.locale,
-        loginTime: new Date().toISOString(),
-        type: "Google"
-    });
+        // Store user data in localStorage (optional for now)
+        localStorage.setItem("playerEmail", data.email);
+        localStorage.setItem("playerName", data.name);
+        localStorage.setItem("playerPicture", data.picture);
+        localStorage.setItem("playerLocale", data.locale);
+        localStorage.setItem("loginTime", new Date().toISOString());
+    } catch (error) {
+        console.error("Error handling credential response:", error);
+        alert("Failed to decode login response. Check console for details.");
+    }
 }
+
 
 function skipLogin() {
     // Store guest data
