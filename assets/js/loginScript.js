@@ -52,43 +52,55 @@ function logLoginData(data) {
 
     console.log("3. Creating callback function:", callbackName);
     window[callbackName] = function(response) {
-        console.log("4. Received response:", response);
-        if (response && response.status === "success") {
-            console.log("5. Login successful, attempting navigation to menu.html");
-            
-            // Try different path variations
-            const menuPaths = [
-                "./pages/menu.html",
-                "../pages/menu.html",
-                "/pages/menu.html",
-                "pages/menu.html"
-            ];
-
-            const currentPath = window.location.pathname;
-            console.log("Current path:", currentPath);
-
-            // Try the first path
-            console.log("6. Attempting navigation to:", menuPaths[0]);
-            window.location.href = menuPaths[0];
-
-            // Fallback check after a short delay
-            setTimeout(() => {
-                if (window.location.pathname === currentPath) {
-                    console.log("7. First navigation attempt failed, trying alternatives");
-                    for (let i = 1; i < menuPaths.length; i++) {
-                        console.log(`Trying alternative path: ${menuPaths[i]}`);
-                        window.location.href = menuPaths[i];
+        console.log("4. CALLBACK EXECUTED with response:", response);
+        
+        try {
+            if (response && response.status === "success") {
+                console.log("5. Login successful, getting current location");
+                const currentLocation = window.location.href;
+                console.log("Current location:", currentLocation);
+                
+                // Get the base URL (remove the file name if present)
+                const baseUrl = currentLocation.substring(0, currentLocation.lastIndexOf('/') + 1);
+                console.log("Base URL:", baseUrl);
+                
+                const menuUrl = `${baseUrl}pages/menu.html`;
+                console.log("6. Attempting navigation to:", menuUrl);
+                
+                // Try direct navigation
+                window.location.href = menuUrl;
+                
+                // Fallback navigation after 1 second if we're still here
+                setTimeout(() => {
+                    if (window.location.href === currentLocation) {
+                        console.log("7. Direct navigation failed, trying alternate method");
+                        window.location.replace(menuUrl);
                     }
-                }
-            }, 500);
-        } else {
-            console.error("Login failed:", response);
-            alert(`Failed to log data: ${response ? response.message : "No response received"}`);
+                }, 1000);
+            } else {
+                console.error("Login response unsuccessful:", response);
+                alert(`Login failed: ${response ? response.message : "No response received"}`);
+            }
+        } catch (error) {
+            console.error("Error in callback:", error);
+            alert("Error during login process. Check console for details.");
         }
 
+        // Cleanup
+        console.log("8. Cleaning up callback");
         delete window[callbackName];
         const script = document.getElementById(callbackName);
         if (script) document.body.removeChild(script);
+    };
+
+    // Add error handling for script load
+    const script = document.createElement("script");
+    script.id = callbackName;
+    
+    // Add error handler for script loading
+    script.onerror = function(error) {
+        console.error("Script loading error:", error);
+        alert("Failed to connect to login service. Please try again.");
     };
 
     // Remove URL encoding from the data before sending
@@ -98,15 +110,25 @@ function logLoginData(data) {
         name: decodeURIComponent(data.name)
     };
 
-    console.log("8. Sending clean data:", cleanData);
+    console.log("9. Preparing clean data:", cleanData);
     const queryParams = new URLSearchParams();
     Object.entries(cleanData).forEach(([key, value]) => {
         queryParams.append(key, value);
     });
 
-    const script = document.createElement("script");
-    script.id = callbackName;
-    script.src = `${scriptUrl}?${queryParams.toString()}`;
-    console.log("9. Adding script with URL:", script.src);
+    script.src = `${scriptUrl}?${queryParams.toString()}&callback=${callbackName}`;
+    console.log("10. Adding script with URL:", script.src);
     document.body.appendChild(script);
+
+    // Add timeout to detect if callback never executes
+    setTimeout(() => {
+        if (window[callbackName]) {
+            console.error("Callback never executed after 5 seconds");
+            alert("Login timed out. Please try again.");
+            // Cleanup
+            delete window[callbackName];
+            const script = document.getElementById(callbackName);
+            if (script) document.body.removeChild(script);
+        }
+    }, 5000);
 }
