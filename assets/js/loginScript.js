@@ -1,30 +1,44 @@
 function handleCredentialResponse(response) {
-    console.log("1. Starting handleCredentialResponse");
-    console.log("Google Credential Response:", response);
+    console.log("Starting Google login");
     try {
         if (!response || !response.credential) throw new Error("Invalid response format.");
     
         const data = JSON.parse(atob(response.credential.split(".")[1]));
-        console.log("2. Decoded Google data:", data);
-        const locale = data.locale || "N/A";
-    
-        logLoginData({
+        console.log("Decoded Google data:", data);
+        
+        // Store user data in localStorage first
+        localStorage.setItem("app_playerEmail", data.email);
+        localStorage.setItem("app_playerName", data.name);
+        localStorage.setItem("app_loginTime", new Date().toISOString());
+
+        // Send data to Google Sheet
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbzwdwbzI366EE2yS4XbO3nl3fkoRnjm_VEmiJzDDBqMYxykfM4hFpdw3fwOei6Tk0ZmNg/exec";
+        
+        const queryParams = new URLSearchParams({
             email: data.email,
             name: data.name,
-            picture: data.picture,
-            locale: locale,
+            picture: data.picture || "",
+            locale: data.locale || "N/A",
             loginTime: new Date().toISOString(),
             type: "Google"
         });
+
+        // Fire and forget the Google Sheet update
+        fetch(`${scriptUrl}?${queryParams.toString()}`)
+            .catch(error => console.error("Error sending data to sheet:", error));
+
+        // Navigate immediately after storing local data
+        console.log("Navigating to menu page");
+        window.location.href = "pages/menu.html";
     
     } catch (error) {
-        console.error("Error in handleCredentialResponse:", error);
-        alert("Failed to decode login response.");
+        console.error("Error in login:", error);
+        alert("Failed to process login. Please try again.");
     }
 }
 
 function skipLogin() {
-    console.log("1. Starting skipLogin");
+    console.log("Starting guest login");
     const guestData = {
         email: "Guest",
         name: "Guest",
@@ -32,12 +46,23 @@ function skipLogin() {
         type: "Guest"
     };
 
-    console.log("2. Guest data:", guestData);
+    // Store guest data in localStorage
     localStorage.setItem("app_playerEmail", guestData.email);
     localStorage.setItem("app_playerName", guestData.name);
     localStorage.setItem("app_loginTime", guestData.loginTime);
 
-    logLoginData(guestData);
+    // Send guest data to Google Sheet
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzZ3jnQYp-JimIE3A0neoqs_nligugjN3bhGIWYP0760vb4hhlcRN3NvEi0NVeocri5CA/exec";
+    
+    const queryParams = new URLSearchParams(guestData);
+
+    // Fire and forget the Google Sheet update
+    fetch(`${scriptUrl}?${queryParams.toString()}`)
+        .catch(error => console.error("Error sending data to sheet:", error));
+
+    // Navigate immediately
+    console.log("Navigating to menu page");
+    window.location.href = "pages/menu.html";
 }
 
 function logLoginData(data) {
