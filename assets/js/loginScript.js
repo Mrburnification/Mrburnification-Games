@@ -23,44 +23,45 @@ function handleCredentialResponse(response) {
   
   function skipLogin() {
     const guestData = {
-        email: "Guest",
-        name: "Guest",
-        loginTime: new Date().toISOString(),
-        type: "Guest"
+      email: "Guest",
+      name: "Guest",
+      loginTime: new Date().toISOString(),
+      type: "Guest"
     };
-
+  
     localStorage.setItem("app_playerEmail", guestData.email);
     localStorage.setItem("app_playerName", guestData.name);
     localStorage.setItem("app_loginTime", guestData.loginTime);
-
+  
     logLoginData(guestData);
-}
-
-function logLoginData(data) {
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzwdwbzI366EE2yS4XbO3nl3fkoRnjm_VEmiJzDDBqMYxykfM4hFpdw3fwOei6Tk0ZmNg/exec";
+  }
+  
+  function logLoginData(data) {
+    const scriptUrl = "https://script.google.com/macros/s/AKfycby3ZeYhhI7qqXeZ0p_5OV557uVAYei8CSPdafmJUi5WrSUm4vG9ntsnBOwu3IPjGg9rAg/exec";
     const callbackName = `callback_${Date.now()}`;
-
+  
     window[callbackName] = function(response) {
-        console.log("Login response:", response);
-        if (response && response.status === "success") {
-            window.location.href = "pages/menu.html";  // Redirect to the menu page
-        } else {
-            alert(`Failed to log data: ${response ? response.message : "No response received"}`);
-        }
-
-        delete window[callbackName];
-        const script = document.getElementById(callbackName);
-        if (script) document.body.removeChild(script);
+      console.log("Login response:", response);
+      if (response && response.status === "success") {
+        console.log("Redirecting to menu...");
+        window.location.href = "pages/menu.html";  // Redirect to the menu page
+      } else {
+        alert(`Failed to log data: ${response ? response.message : "No response received"}`);
+      }
+      delete window[callbackName];
+      const script = document.getElementById(callbackName);
+      if (script) document.body.removeChild(script);
     };
-
+  
     const queryParams = new URLSearchParams(
-        Object.fromEntries(
-            Object.entries(data).map(([key, value]) => [key, encodeURIComponent(value)])
-        )
+      Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [key, encodeURIComponent(value)])
+      )
     );
-
+  
     const script = document.createElement("script");
     script.id = callbackName;
     script.src = `${scriptUrl}?${queryParams.toString()}`;
     document.body.appendChild(script);
-}
+  }
+  
