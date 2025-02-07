@@ -38,7 +38,7 @@ function skipLogin() {
 }
 
 function logLoginData(data) {
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbycb1SogL4ecCKYf9GKADHNwc9vm-hd4B46mNEPhc3ExtJgVgwmXtz4QjS25MhjDuweiA/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyOdcUPZUOqzuB97mC4RHQa8tHRfOtri2WivdqVl458z4x-E8LHCwFOP1iM7cTROISs_w/exec";
     
     // Create a unique callback function name
     const callbackName = `callback_${Date.now()}`;
