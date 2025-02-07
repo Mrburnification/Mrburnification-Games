@@ -4,7 +4,7 @@ function handleCredentialResponse(response) {
         const data = JSON.parse(atob(response.credential.split(".")[1]));
         const locale = data.locale || "N/A";  // Default to "N/A" if locale is missing
 
-        alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nLocale: ${locale}`);
+        // alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nLocale: ${locale}`);
 
         // Send the data to Google Sheets
         logLoginData({
@@ -38,7 +38,7 @@ function skipLogin() {
 }
 
 function logLoginData(data) {
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxvqbTdulXeJ2efVoSPEtQeNSeMT2wSr04DYvK_c3u1LLs3FQYAvnkwZn2FSxwOBeJa/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbycb1SogL4ecCKYf9GKADHNwc9vm-hd4B46mNEPhc3ExtJgVgwmXtz4QjS25MhjDuweiA/exec";
     
     // Create a unique callback function name
     const callbackName = `callback_${Date.now()}`;

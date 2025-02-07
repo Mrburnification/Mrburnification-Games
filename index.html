@@ -21,20 +21,6 @@
                 <div class="g_id_signin" data-type="standard"></div>
                 <button onclick="skipLogin()" class="guest-button">Continue as Guest</button>
             </div> 
-            <button onclick="testResponse()">Simulate Login</button>
-            <script>
-                function testResponse() {
-                    const fakeResponse = {
-                        credential: btoa(JSON.stringify({
-                            name: "Test User",
-                            email: "testuser@example.com",
-                            picture: "https://example.com/picture.jpg",
-                            locale: "en"
-                        }))
-                    };
-                    handleCredentialResponse(fakeResponse);
-                }
-            </script> 
     </div>
     <script src="assets/js/loginAnimation.js"></script>
     <script src="assets/js/loginScript.js"></script>
