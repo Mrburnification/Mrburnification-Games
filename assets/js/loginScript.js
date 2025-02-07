@@ -1,72 +1,66 @@
 function handleCredentialResponse(response) {
     console.log("Google Credential Response:", response);
     try {
-        const data = JSON.parse(atob(response.credential.split(".")[1]));
-        const locale = data.locale || "N/A";  // Default to "N/A" if locale is missing
-
-        // alert(`Login Successful!\n\nName: ${data.name}\nEmail: ${data.email}\nLocale: ${locale}`);
-
-        // Send the data to Google Sheets
-        logLoginData({
-            email: data.email,
-            name: data.name,
-            picture: data.picture,
-            locale: locale,
-            loginTime: new Date().toISOString(),
-            type: "Google"
-        });
-
+      if (!response || !response.credential) throw new Error("Invalid response format.");
+  
+      const data = JSON.parse(atob(response.credential.split(".")[1]));
+      const locale = data.locale || "N/A";
+  
+      logLoginData({
+        email: data.email,
+        name: data.name,
+        picture: data.picture,
+        locale: locale,
+        loginTime: new Date().toISOString(),
+        type: "Google"
+      });
+  
     } catch (error) {
-        console.error("Error handling credential response:", error);
-        alert("Failed to decode login response.");
+      console.error("Error handling credential response:", error);
+      alert("Failed to decode login response.");
     }
-}
-
-function skipLogin() {
-    // Store guest data
-    localStorage.setItem("playerEmail", "Guest");
-    localStorage.setItem("playerName", "Guest");
-    localStorage.setItem("loginTime", new Date().toISOString());
-
-    // Log guest login
-    logLoginData({
+  }
+  
+  function skipLogin() {
+    const guestData = {
         email: "Guest",
         name: "Guest",
         loginTime: new Date().toISOString(),
         type: "Guest"
-    });
+    };
+
+    localStorage.setItem("app_playerEmail", guestData.email);
+    localStorage.setItem("app_playerName", guestData.name);
+    localStorage.setItem("app_loginTime", guestData.loginTime);
+
+    logLoginData(guestData);
 }
 
 function logLoginData(data) {
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyOdcUPZUOqzuB97mC4RHQa8tHRfOtri2WivdqVl458z4x-E8LHCwFOP1iM7cTROISs_w/exec";
-    
-    // Create a unique callback function name
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzwdwbzI366EE2yS4XbO3nl3fkoRnjm_VEmiJzDDBqMYxykfM4hFpdw3fwOei6Tk0ZmNg/exec";
     const callbackName = `callback_${Date.now()}`;
-    
-    // Attach the callback function to the window object
+
     window[callbackName] = function(response) {
-        console.log("Login data logged successfully:", response);
-        if (response.status === "success") {
-            window.location.href = "pages/menu.html";  // Redirect on success
+        console.log("Login response:", response);
+        if (response && response.status === "success") {
+            window.location.href = "pages/menu.html";  // Redirect to the menu page
         } else {
-            alert(`Failed to log data: ${response.message}`);
+            alert(`Failed to log data: ${response ? response.message : "No response received"}`);
         }
-        
-        // Clean up the script tag and callback function after it executes
+
         delete window[callbackName];
         const script = document.getElementById(callbackName);
         if (script) document.body.removeChild(script);
     };
 
-    // Build the full URL with query parameters for JSONP
-    const queryParams = new URLSearchParams({
-        ...data,
-        callback: callbackName
-    });
+    const queryParams = new URLSearchParams(
+        Object.fromEntries(
+            Object.entries(data).map(([key, value]) => [key, encodeURIComponent(value)])
+        )
+    );
 
-    // Create the <script> element
     const script = document.createElement("script");
-    script.id = callbackName;  // Assign an ID for easy cleanup
+    script.id = callbackName;
     script.src = `${scriptUrl}?${queryParams.toString()}`;
-    document.body.appendChild(script);  // Add the script to the DOM
+    document.body.appendChild(script);
 }
