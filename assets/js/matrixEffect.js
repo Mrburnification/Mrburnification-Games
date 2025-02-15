@@ -24,3 +24,19 @@ function drawMatrix() {
 setInterval(drawMatrix, 50);
 
 // Add GSAP for smoother animations if needed later
+
+
+///
+
+//contact stuff
+
+window.addEventListener('scroll', function() {
+    const footer = document.getElementById('contact-footer');
+    
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      footer.classList.add('visible');
+    } else {
+      footer.classList.remove('visible');
+    }
+  });
+  
