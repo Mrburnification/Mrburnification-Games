@@ -62,7 +62,7 @@ async function saveProfileChanges() {
         return;
     }
 
-    const url = `https://script.google.com/macros/s/AKfycbzQiWbcU-hMIeLoyJ8_glrhoMFWSuv3F7EfS97hwgt4t8FoZrNfsTJXu-9nsX_uivl0TA/exec?email=${encodeURIComponent(email)}&name=${encodeURIComponent(newName)}&picture=${encodeURIComponent(selectedEmoji)}`;
+    const url = `https://script.google.com/macros/s/AKfycbxVmWWgBASMpW-qz7JwawWQHZWWxrYpLKoBofANkm0TIRIbWSLDtWDfFsJ7bs8U6Kuuog/exec?email=${encodeURIComponent(email)}&name=${encodeURIComponent(newName)}&picture=${encodeURIComponent(selectedEmoji)}`;
 
     try {
         const response = await fetch(url);
