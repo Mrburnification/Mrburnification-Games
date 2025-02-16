@@ -1,0 +1,77 @@
+<!-- game_pre.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Mode Selection</title>
+    <!-- Include your existing styles -->
+    <link href="../assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="mode-selection">
+        <h2 id="gameTitle" class="cyber-font">SELECT MODE</h2>
+        <button id="practiceBtn" class="cyber-button" onclick="startPractice()">
+            PRACTICE MODE
+        </button>
+        <button id="dailyBtn" class="cyber-button" onclick="startDailyChallenge()">
+            DAILY CHALLENGE
+        </button>
+        <div id="dailyStatus"></div>
+    </div>
+
+    <script>
+        // Get game parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameName = urlParams.get('game');
+        
+        // Set game title
+        document.getElementById('gameTitle').textContent = 
+            `${gameName.replace(/_/g, ' ')} - SELECT MODE`;
+
+        // Check daily challenge availability
+        checkDailyAvailability();
+
+        async function checkDailyAvailability() {
+            const userEmail = getCurrentUserEmail();
+            const gameName = urlParams.get('game');
+            
+            const queryParams = new URLSearchParams({
+              action: 'check',
+              email: userEmail,
+              game: gameName
+            });
+          
+            try {
+              const response = await fetch(`https://script.google.com/macros/s/AKfycbyFxBg01iC1DpXbWoODS8dlGmDr0tOmcV4caiDs4EPP-NzCYwq9JioPWVKurKqsIpNJAw/exec?${queryParams}`);
+              const data = await response.json();
+              
+              if (data.error) throw new Error(data.message);
+              
+              // Update UI based on data.available
+            } catch (error) {
+              console.error('Availability check failed:', error);
+            }
+          }
+
+        function startPractice() {
+            window.location.href = `${gameName.toLowerCase()}.html?mode=practice`;
+        }
+
+        function startDailyChallenge() {
+            window.location.href = `${gameName.toLowerCase()}.html?mode=daily`;
+        }
+        function getCurrentUserEmail() {
+            // Get email from localStorage
+            const email = localStorage.getItem("app_playerEmail");
+            
+            // Validate email format (basic check)
+            if (email && /\S+@\S+\.\S+/.test(email)) {
+                return email;
+            }
+            
+            // Fallback for testing
+            console.warn('No valid email found, using test email');
+            return 'test@example.com';
+        }
+    </script>
+</body>
+</html>

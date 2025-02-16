@@ -444,3 +444,84 @@ button {
 button:hover {
     background-color: #005f73;
 }
+
+/* Mode selection page styles */
+.mode-selection {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff88;
+    width: 80%;
+    max-width: 500px;
+    margin: 5rem auto;
+}
+
+.cyber-button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    background: #1a1a1a;
+    border: 2px solid #00ff88;
+    color: #00ff88;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.cyber-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #ff003c;
+}
+
+.cyber-button:hover:not(:disabled) {
+    background: #00ff8822;
+    box-shadow: 0 0 15px #00ff88;
+}
+
+#dailyStatus {
+    margin-top: 1rem;
+    color: #00ff88;
+    font-size: 0.9rem;
+}
+
+/* Add to your styles.css */
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cyber-ui {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.score-box {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+}
