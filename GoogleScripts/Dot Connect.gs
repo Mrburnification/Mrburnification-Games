@@ -1,16 +1,22 @@
-// current code for this is https://script.google.com/macros/s/AKfycbyFxBg01iC1DpXbWoODS8dlGmDr0tOmcV4caiDs4EPP-NzCYwq9JioPWVKurKqsIpNJAw/exec?
+// current code for this is https://script.google.com/macros/s/AKfycby7kDY1s_gjB0Zq0X5YZUCwWS1TXior3xeErIR789QyvnxoxEh-wai4N0cp7cJrRbJ_ng/exec
 
 
 function doGet(e) {
   const spreadsheetId = "1C8l4hR68yJyykjFLZ-pzF9f8mNA5l1iHClGnbGIlCSs";
   const ss = SpreadsheetApp.openById(spreadsheetId);
   const action = e.parameter.action;
+  const email = e.parameter.email;
 
   try {
     if (action === 'check') {
       return handleCheckRequest(e, ss);
     } else if (action === 'submit') {
       return handleSubmitRequest(e, ss);
+    } else if (action === 'checkDaily') {
+      return checkDailyChallenge(email);
+    } else if (action === 'submitDaily') {
+      const score = e.parameter.score;
+      return submitDailyChallenge(email, score);
     }
     return createErrorResponse('Invalid action parameter');
   } catch (error) {
@@ -63,6 +69,38 @@ function handleSubmitRequest(e, ss) {
   sheet.appendRow(newRow);
   return ContentService.createTextOutput(JSON.stringify({success: true}))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function checkDailyChallenge(email) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('DailyChallenges');
+  const today = new Date().toDateString();
+  
+  // Find if user has played today
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === email && data[i][1] === today) {
+      return ContentService.createTextOutput(JSON.stringify({
+        hasPlayed: true,
+        score: data[i][2]
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    hasPlayed: false
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function submitDailyChallenge(email, score) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('DailyChallenges');
+  const today = new Date().toDateString();
+  
+  // Add new row with player's daily challenge attempt
+  sheet.appendRow([email, today, score]);
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    status: 'success'
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function createErrorResponse(message) {

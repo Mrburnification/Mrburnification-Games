@@ -84,25 +84,75 @@ async function saveProfileChanges() {
 }
 
 async function initializeGame(daily = false) {
-    try {
-        showLoadingSpinner();
-        
-        // Initialize game state
-        await loadGameData(daily);
-        
-        hideLoadingSpinner();
-    } catch (error) {
-        console.error('Game initialization failed:', error);
-        showErrorMessage('Failed to load game. Please try again.');
+    isDailyChallenge = daily;
+    
+    if (daily) {
+        const email = localStorage.getItem("app_playerEmail");
+        if (!email) {
+            alert("Please log in to play the daily challenge");
+            window.location.href = 'index.html';
+            return;
+        }
+
+        try {
+            // Check with Google Scripts if user has already played today - fixed URL
+            const checkUrl = `https://script.google.com/macros/s/AKfycby7kDY1s_gjB0Zq0X5YZUCwWS1TXior3xeErIR789QyvnxoxEh-wai4N0cp7cJrRbJ_ng/exec?action=checkDaily&email=${encodeURIComponent(email)}`;
+            const response = await fetch(checkUrl);
+            const data = await response.json();
+            
+            if (data.hasPlayed) {
+                showCompletionScreen(data.score);
+                return;
+            }
+        } catch (error) {
+            console.error('Error checking daily challenge status:', error);
+            alert('Error checking daily challenge status. Please try again.');
+            return;
+        }
     }
+    
+    // Initialize game only if we haven't returned early
+    startGame(daily);
 }
 
-function endGame() {
-    // ... existing end game code ...
+function showCompletionScreen(score) {
+    // Hide game container
+    const gameContainer = document.querySelector('.game-container');
+    if (gameContainer) gameContainer.style.display = 'none';
     
+    // Create and show completion screen
+    const completionScreen = document.createElement('div');
+    completionScreen.className = 'completion-screen';
+    completionScreen.innerHTML = `
+        <h2>Daily Challenge Completed!</h2>
+        <p>Your score: ${score}</p>
+        <div class="completion-buttons">
+            <button onclick="window.location.href='dot_connect.html?mode=practice'">Practice Mode</button>
+            <button onclick="window.location.href='index.html'">Home</button>
+        </div>
+    `;
+    
+    document.body.appendChild(completionScreen);
+}
+
+async function endGame(score) {
     if (isDailyChallenge) {
-        // Store completion date
-        localStorage.setItem('lastDailyChallenge', new Date().toDateString());
+        const email = localStorage.getItem("app_playerEmail");
+        
+        try {
+            // Record completion in Google Scripts - fixed URL
+            const submitUrl = `https://script.google.com/macros/s/AKfycby7kDY1s_gjB0Zq0X5YZUCwWS1TXior3xeErIR789QyvnxoxEh-wai4N0cp7cJrRbJ_ng/exec?action=submitDaily&email=${encodeURIComponent(email)}&score=${score}`;
+            await fetch(submitUrl);
+            
+            // Show completion screen
+            showCompletionScreen(score);
+        } catch (error) {
+            console.error('Error submitting daily challenge:', error);
+            alert('Error submitting score. Please try again.');
+        }
+    } else {
+        // Handle practice mode completion
+        // ... existing end game code ...
     }
 }
 
