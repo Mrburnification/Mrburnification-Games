@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - MRBURNIFICATION GAMES</title>
+    <link href="../assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Your Profile</h1>
+            <nav>
+                <a href="menu.html">Home</a>
+                <a href="analytics.html">Analytics</a>
+            </nav>
+        </header>
+        
+        <div class="profile-container">
+            <div class="profile-image-container">
+                <img id="profileImage" src="" alt="Profile Image">
+                <button id="changeImageBtn">Change Image</button>
+            </div>
+            
+            <div class="profile-details">
+                <div class="form-group">
+                    <label for="displayName">Display Name</label>
+                    <input type="text" id="displayName" placeholder="Your display name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <button id="saveProfileBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="emojiPicker" class="emoji-picker">
+            <!-- Emojis will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+        import firebaseConfig from '../assets/js/firebase-config.js';
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Make Firebase instances available globally
+        window.db = db;
+        window.auth = auth;
+    </script>
+    
+    <script type="module" src="../assets/js/profile.js"></script>
+</body>
+</html> 

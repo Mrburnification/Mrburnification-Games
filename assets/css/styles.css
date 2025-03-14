@@ -525,3 +525,124 @@ body {
     padding: 10px;
     border-radius: 5px;
 }
+
+/* Add these styles for the profile page */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+@media (min-width: 768px) {
+    .profile-container {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+.profile-image-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.profile-image-container img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.profile-details {
+    flex: 1;
+    padding-left: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+#saveProfileBtn {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#saveProfileBtn:hover {
+    background: #34495e;
+}
+
+#changeImageBtn {
+    background: #4285f4;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#changeImageBtn:hover {
+    background: #357ae8;
+}
+
+.emoji-picker {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    z-index: 1000;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.emoji {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.emoji:hover {
+    transform: scale(1.1);
+}

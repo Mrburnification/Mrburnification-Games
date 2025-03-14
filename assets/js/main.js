@@ -131,7 +131,8 @@ function showCompletionScreen(score) {
         <p>Your score: ${score}</p>
         <div class="completion-buttons">
             <button onclick="window.location.href='dot_connect.html?mode=practice'">Practice Mode</button>
-            <button onclick="window.location.href='index.html'">Home</button>
+            <button onclick="window.location.href='menu.html'">Home</button>
+            <button onclick="window.location.href='analytics.html'">View Analytics</button>
         </div>
     `;
     
@@ -245,15 +246,33 @@ async function submitDailyChallenge(email, score) {
     const docRef = doc(db, "dailyChallenges", `${email}_${today}`);
     
     try {
+        // Save the score
         await setDoc(docRef, {
             email,
             score,
             timestamp: new Date().toISOString()
         });
-        showCompletionScreen(score);
+        
+        // Also update user stats
+        const userRef = doc(db, "users", email);
+        const userDoc = await getDoc(userRef);
+        
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const gamesPlayed = userData.gamesPlayed || 0;
+            const bestScore = userData.bestScore || Infinity;
+            
+            await setDoc(userRef, {
+                gamesPlayed: gamesPlayed + 1,
+                bestScore: score < bestScore ? score : bestScore,
+                lastGamePlayed: new Date().toISOString()
+            }, { merge: true });
+        }
+        
+        return true;
     } catch (error) {
         console.error("Error submitting daily challenge:", error);
-        alert("Error saving score. Please try again.");
+        throw error;
     }
 }
 
@@ -266,11 +285,15 @@ async function finalizeGame() {
         try {
             const user = auth.currentUser;
             if (!user) {
-                alert("Please log in to save your score");
-                return;
+                const email = localStorage.getItem("app_playerEmail");
+                if (!email) {
+                    alert("Please log in to save your score");
+                    return;
+                }
+                await submitDailyChallenge(email, timer);
+            } else {
+                await submitDailyChallenge(user.email, timer);
             }
-
-            await submitDailyChallenge(user.email, timer);
             showCompletionScreen(timer);
         } catch (error) {
             console.error('Error saving score:', error);
