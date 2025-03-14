@@ -181,3 +181,20 @@ body {
 .completion-buttons button:hover {
     background: #34495e;
 }
+
+#googleSignIn {
+    background: #4285f4;
+    margin-bottom: 10px;
+}
+
+#googleSignIn:hover {
+    background: #357ae8;
+}
+
+#guestLogin {
+    background: #2c3e50;
+}
+
+#guestLogin:hover {
+    background: #34495e;
+}
