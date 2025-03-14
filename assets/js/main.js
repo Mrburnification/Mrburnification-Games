@@ -1,3 +1,8 @@
+import firebaseConfig from './firebase-config.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, collection } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
 const emojiBaseURL = "https://openmoji.org/data/color/svg/"; // Base URL for OpenMoji icons
 const emojiList = ["1F604", "1F60D", "1F92A", "1F47D", "1F47E", "1F680", "1F525", "1F4A1"]; // Example emoji codes
 
@@ -8,9 +13,15 @@ let isDailyChallenge = false;
 const gameContainer = document.querySelector('.game-container');
 const dots = new Map(); // Store dot elements by their coordinates
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Document fully loaded.");
     loadEmojis();
+    testFirebase();
 });
 
 function showModal(modalId) {
@@ -46,7 +57,6 @@ function loadEmojis() {
         `</div></div>`;
 }
 
-
 function selectEmoji(url) {
     selectedEmoji = url;
     document.querySelectorAll(".emoji-grid img").forEach(img => img.style.border = "");
@@ -54,11 +64,11 @@ function selectEmoji(url) {
 }
 
 async function saveProfileChanges() {
-    const newName = document.getElementById("userName").value; // Corrected ID
-    const email = localStorage.getItem("app_playerEmail"); // Retrieve email from localStorage
+    const newName = document.getElementById("userName").value;
+    const user = auth.currentUser;
 
-    if (!email) {
-        alert("No email found in local storage. Please log in.");
+    if (!user) {
+        alert("Please log in first");
         return;
     }
 
@@ -67,19 +77,17 @@ async function saveProfileChanges() {
         return;
     }
 
-    const url = `https://script.google.com/macros/s/AKfycbxVmWWgBASMpW-qz7JwawWQHZWWxrYpLKoBofANkm0TIRIbWSLDtWDfFsJ7bs8U6Kuuog/exec?email=${encodeURIComponent(email)}&name=${encodeURIComponent(newName)}&picture=${encodeURIComponent(selectedEmoji)}`;
-
     try {
-        const response = await fetch(url);
-        const data = await response.json();
-        if (data.status === "success") {
-            alert("Profile updated!");
-            closeModal('profileModal'); // Assuming your modal has an ID of 'profileModal'
-        } else {
-            alert("Error updating profile: " + data.message);
-        }
+        await setDoc(doc(db, "users", user.email), {
+            name: newName,
+            picture: selectedEmoji,
+            updatedAt: new Date().toISOString()
+        }, { merge: true });
+        
+        alert("Profile updated!");
+        closeModal('profileModal');
     } catch (error) {
-        alert("Network error: " + error.message);
+        alert("Error updating profile: " + error.message);
     }
 }
 
@@ -87,21 +95,17 @@ async function initializeGame(daily = false) {
     isDailyChallenge = daily;
     
     if (daily) {
-        const email = localStorage.getItem("app_playerEmail");
-        if (!email) {
+        const user = auth.currentUser;
+        if (!user) {
             alert("Please log in to play the daily challenge");
             window.location.href = 'index.html';
             return;
         }
 
         try {
-            // Check with Google Scripts if user has already played today - fixed URL
-            const checkUrl = `https://script.google.com/macros/s/AKfycby7kDY1s_gjB0Zq0X5YZUCwWS1TXior3xeErIR789QyvnxoxEh-wai4N0cp7cJrRbJ_ng/exec?action=checkDaily&email=${encodeURIComponent(email)}`;
-            const response = await fetch(checkUrl);
-            const data = await response.json();
-            
-            if (data.hasPlayed) {
-                showCompletionScreen(data.score);
+            const result = await checkDailyChallenge(user.email);
+            if (result.hasPlayed) {
+                showCompletionScreen(result.score);
                 return;
             }
         } catch (error) {
@@ -111,7 +115,6 @@ async function initializeGame(daily = false) {
         }
     }
     
-    // Initialize game only if we haven't returned early
     startGame(daily);
 }
 
@@ -219,6 +222,80 @@ function createDot(x, y) {
     dot.style.top = `${y}%`;
     dots.set(`${x},${y}`, dot);
     return dot;
+}
+
+async function checkDailyChallenge(email) {
+    const today = new Date().toDateString();
+    const docRef = doc(db, "dailyChallenges", `${email}_${today}`);
+    
+    try {
+        const docSnap = await getDoc(docRef);
+        return {
+            hasPlayed: docSnap.exists(),
+            score: docSnap.exists() ? docSnap.data().score : null
+        };
+    } catch (error) {
+        console.error("Error checking daily challenge:", error);
+        return { hasPlayed: false, score: null };
+    }
+}
+
+async function submitDailyChallenge(email, score) {
+    const today = new Date().toDateString();
+    const docRef = doc(db, "dailyChallenges", `${email}_${today}`);
+    
+    try {
+        await setDoc(docRef, {
+            email,
+            score,
+            timestamp: new Date().toISOString()
+        });
+        showCompletionScreen(score);
+    } catch (error) {
+        console.error("Error submitting daily challenge:", error);
+        alert("Error saving score. Please try again.");
+    }
+}
+
+async function finalizeGame() {
+    gameCompleted = true;
+    calculateFinalScore();
+    createExplosion(dots[dotOrder[activeDotIndex]].pos);
+
+    if (gameMode === 'daily') {
+        try {
+            const user = auth.currentUser;
+            if (!user) {
+                alert("Please log in to save your score");
+                return;
+            }
+
+            await submitDailyChallenge(user.email, timer);
+            showCompletionScreen(timer);
+        } catch (error) {
+            console.error('Error saving score:', error);
+            alert('Error saving score. Please try again.');
+        }
+    }
+}
+
+async function testFirebase() {
+    try {
+        // Test write
+        await setDoc(doc(db, "test", "test-doc"), {
+            timestamp: new Date().toISOString(),
+            message: "Test successful"
+        });
+        console.log("Firebase write successful");
+
+        // Test read
+        const docSnap = await getDoc(doc(db, "test", "test-doc"));
+        if (docSnap.exists()) {
+            console.log("Firebase read successful:", docSnap.data());
+        }
+    } catch (error) {
+        console.error("Firebase test failed:", error);
+    }
 }
 
 

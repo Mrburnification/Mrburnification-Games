@@ -1,3 +1,39 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+import firebaseConfig from './firebase-config.js';
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+async function handleGoogleSignIn() {
+    const provider = new GoogleAuthProvider();
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        localStorage.setItem("app_playerEmail", user.email);
+        window.location.href = 'dot_connect.html';
+    } catch (error) {
+        console.error("Error signing in:", error);
+        alert("Error signing in. Please try again.");
+    }
+}
+
+// Handle guest login
+function skipLogin() {
+    console.log("Starting guest login");
+    localStorage.setItem("app_playerEmail", "Guest");
+    localStorage.setItem("app_playerName", "Guest");
+    localStorage.setItem("app_loginTime", new Date().toISOString());
+    window.location.href = "pages/menu.html";
+}
+
+// Add event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('googleSignIn')?.addEventListener('click', handleGoogleSignIn);
+    document.getElementById('guestLogin')?.addEventListener('click', skipLogin);
+});
+
 function handleCredentialResponse(response) {
     console.log("Starting Google login");
     try {
@@ -35,34 +71,6 @@ function handleCredentialResponse(response) {
         console.error("Error in login:", error);
         alert("Failed to process login. Please try again.");
     }
-}
-
-function skipLogin() {
-    console.log("Starting guest login");
-    const guestData = {
-        email: "Guest",
-        name: "Guest",
-        loginTime: new Date().toISOString(),
-        type: "Guest"
-    };
-
-    // Store guest data in localStorage
-    localStorage.setItem("app_playerEmail", guestData.email);
-    localStorage.setItem("app_playerName", guestData.name);
-    localStorage.setItem("app_loginTime", guestData.loginTime);
-
-    // Send guest data to Google Sheet
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzZ3jnQYp-JimIE3A0neoqs_nligugjN3bhGIWYP0760vb4hhlcRN3NvEi0NVeocri5CA/exec";
-    
-    const queryParams = new URLSearchParams(guestData);
-
-    // Fire and forget the Google Sheet update
-    fetch(`${scriptUrl}?${queryParams.toString()}`)
-        .catch(error => console.error("Error sending data to sheet:", error));
-
-    // Navigate immediately
-    console.log("Navigating to menu page");
-    window.location.href = "pages/menu.html";
 }
 
 function logLoginData(data) {
