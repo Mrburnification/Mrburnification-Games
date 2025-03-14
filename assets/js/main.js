@@ -96,16 +96,23 @@ async function initializeGame(daily = false) {
     
     if (daily) {
         const user = auth.currentUser;
-        if (!user) {
-            alert("Please log in to play the daily challenge");
-            window.location.href = 'index.html';
-            return;
+        let email;
+        
+        if (user) {
+            email = user.email;
+        } else {
+            email = localStorage.getItem("app_playerEmail");
+            if (!email) {
+                alert("Please log in to play the daily challenge");
+                window.location.href = '../index.html';
+                return;
+            }
         }
 
         try {
-            const result = await checkDailyChallenge(user.email);
+            const result = await checkDailyChallenge(email);
             if (result.hasPlayed) {
-                showCompletionScreen(result.score);
+                showCompletionScreen(result.score, false);
                 return;
             }
         } catch (error) {
@@ -118,7 +125,7 @@ async function initializeGame(daily = false) {
     startGame(daily);
 }
 
-function showCompletionScreen(score) {
+function showCompletionScreen(score, isFirstTime = true) {
     // Hide game container
     const gameContainer = document.querySelector('.game-container');
     if (gameContainer) gameContainer.style.display = 'none';
@@ -126,9 +133,13 @@ function showCompletionScreen(score) {
     // Create and show completion screen
     const completionScreen = document.createElement('div');
     completionScreen.className = 'completion-screen';
+    
+    let message = isFirstTime ? 
+        `<h2>Daily Challenge Completed!</h2><p>Your score: ${score}</p>` : 
+        `<h2>You've already completed today's challenge</h2><p>Your score: ${score}</p><p>Want to practice more?</p>`;
+    
     completionScreen.innerHTML = `
-        <h2>Daily Challenge Completed!</h2>
-        <p>Your score: ${score}</p>
+        ${message}
         <div class="completion-buttons">
             <button onclick="window.location.href='dot_connect.html?mode=practice'">Practice Mode</button>
             <button onclick="window.location.href='menu.html'">Home</button>
@@ -284,17 +295,20 @@ async function finalizeGame() {
     if (gameMode === 'daily') {
         try {
             const user = auth.currentUser;
-            if (!user) {
-                const email = localStorage.getItem("app_playerEmail");
+            let email;
+            
+            if (user) {
+                email = user.email;
+            } else {
+                email = localStorage.getItem("app_playerEmail");
                 if (!email) {
                     alert("Please log in to save your score");
                     return;
                 }
-                await submitDailyChallenge(email, timer);
-            } else {
-                await submitDailyChallenge(user.email, timer);
             }
-            showCompletionScreen(timer);
+            
+            await submitDailyChallenge(email, timer);
+            showCompletionScreen(timer, true);
         } catch (error) {
             console.error('Error saving score:', error);
             alert('Error saving score. Please try again.');

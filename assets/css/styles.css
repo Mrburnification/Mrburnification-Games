@@ -3,6 +3,7 @@
     --cyber-purple: #bc13fe;
     --dark-bg: #0a0a0f;
     --hacker-green: #0f0;
+    --card-bg: rgba(20, 20, 30, 0.9);
 }
 
 * {
@@ -532,11 +533,13 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 2rem;
-    background: white;
+    background: var(--card-bg);
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
     margin: 2rem auto;
     max-width: 600px;
+    border: 1px solid var(--neon-blue);
+    color: white;
 }
 
 @media (min-width: 768px) {
@@ -549,6 +552,7 @@ body {
 .profile-image-container {
     text-align: center;
     margin-bottom: 2rem;
+    position: relative;
 }
 
 .profile-image-container img {
@@ -556,8 +560,9 @@ body {
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #2c3e50;
+    border: 3px solid var(--neon-blue);
     margin-bottom: 1rem;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
 }
 
 .profile-details {
@@ -573,45 +578,57 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #2c3e50;
+    color: var(--neon-blue);
 }
 
 .form-group input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(0, 243, 255, 0.3);
     border-radius: 4px;
     font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
 }
 
 #saveProfileBtn {
-    background: #2c3e50;
-    color: white;
+    background: var(--neon-blue);
+    color: var(--dark-bg);
     border: none;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     border-radius: 4px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    font-weight: bold;
 }
 
 #saveProfileBtn:hover {
-    background: #34495e;
+    background: var(--cyber-purple);
+    color: white;
+    box-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
 }
 
 #changeImageBtn {
-    background: #4285f4;
-    color: white;
+    background: var(--neon-blue);
+    color: var(--dark-bg);
     border: none;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
     border-radius: 4px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 #changeImageBtn:hover {
-    background: #357ae8;
+    background: var(--cyber-purple);
+    color: white;
+    box-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
 }
 
 .emoji-picker {
@@ -691,4 +708,154 @@ body {
 .stats-card th {
     color: var(--cyber-purple);
     font-weight: bold;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--neon-blue);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+header h1 {
+    color: var(--neon-blue);
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    margin: 0;
+}
+
+header nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: rgba(0, 243, 255, 0.1);
+    transition: all 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+}
+
+header nav a:hover {
+    background: rgba(188, 19, 254, 0.2);
+    color: var(--cyber-purple);
+    transform: translateY(-2px);
+}
+
+/* Add these styles for the game layout */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(10, 10, 15, 0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--neon-blue);
+}
+
+.game-header h1 {
+    color: var(--neon-blue);
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.game-header nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.game-header nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    background: rgba(0, 243, 255, 0.1);
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.game-header nav a:hover {
+    background: rgba(188, 19, 254, 0.2);
+    color: var(--cyber-purple);
+}
+
+canvas {
+    display: block;
+    margin: 70px auto 0;
+    max-width: 100%;
+    max-height: calc(100vh - 100px);
+}
+
+.completion-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+    z-index: 1000;
+    border: 1px solid var(--neon-blue);
+    max-width: 90%;
+    width: 400px;
+}
+
+.completion-screen h2 {
+    color: var(--neon-blue);
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.completion-screen p {
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.completion-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.completion-buttons button {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background: var(--neon-blue);
+    color: var(--dark-bg);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    min-width: 120px;
+}
+
+.completion-buttons button:hover {
+    background: var(--cyber-purple);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
 }

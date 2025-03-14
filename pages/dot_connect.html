@@ -9,14 +9,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 <body>
-    <canvas id="defaultCanvas0"></canvas>
-    <div class="game-overlay">
-        <div id="gameUI" class="cyber-ui">
-            <div class="score-box">
-                <span id="timer">00.00s</span>
-                <span id="penalty">+0.00s</span>
+    <header class="game-header">
+        <h1>DOT CONNECT</h1>
+        <nav>
+            <a href="menu.html">Home</a>
+            <a href="analytics.html">Analytics</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+
+    <div class="game-container">
+        <canvas id="defaultCanvas0"></canvas>
+        <div class="game-overlay">
+            <div id="gameUI" class="cyber-ui">
+                <div class="score-box">
+                    <span id="timer">00.00s</span>
+                    <span id="penalty">+0.00s</span>
+                </div>
+                <div id="modeIndicator" class="cyber-font"></div>
             </div>
-            <div id="modeIndicator" class="cyber-font"></div>
         </div>
     </div>
 
