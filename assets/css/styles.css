@@ -646,3 +646,49 @@ body {
 .emoji:hover {
     transform: scale(1.1);
 }
+
+/* Add these styles for the analytics page */
+.analytics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .analytics-container {
+        flex-direction: row;
+    }
+}
+
+.stats-card {
+    background: rgba(20, 20, 30, 0.9);
+    border-radius: 10px;
+    padding: 1.5rem;
+    flex: 1;
+    border: 1px solid var(--neon-blue);
+}
+
+.stats-card h2 {
+    color: var(--neon-blue);
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.stats-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-card th, .stats-card td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stats-card th {
+    color: var(--cyber-purple);
+    font-weight: bold;
+}

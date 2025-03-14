@@ -19,20 +19,29 @@ async function handleGoogleSignIn() {
         localStorage.setItem("app_playerName", user.displayName || user.email);
         localStorage.setItem("app_loginTime", new Date().toISOString());
         
-        // Store user data in Firestore
-        await setDoc(doc(db, "users", user.email), {
-            email: user.email,
-            displayName: user.displayName || user.email,
-            photoURL: user.photoURL || "",
-            lastLogin: new Date().toISOString(),
-            createdAt: new Date().toISOString()
-        }, { merge: true });
+        console.log("Attempting to store user data in Firestore...");
+        
+        try {
+            // Store user data in Firestore
+            await setDoc(doc(db, "users", user.email), {
+                email: user.email,
+                displayName: user.displayName || user.email,
+                photoURL: user.photoURL || "",
+                lastLogin: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            }, { merge: true });
+            
+            console.log("User data stored successfully");
+        } catch (firestoreError) {
+            console.error("Firestore error:", firestoreError);
+            // Continue anyway since we have the data in localStorage
+        }
         
         // Navigate to menu page
         window.location.href = "pages/menu.html";
     } catch (error) {
         console.error("Error signing in:", error);
-        alert("Error signing in. Please try again.");
+        alert(`Error signing in: ${error.message}`);
     }
 }
 

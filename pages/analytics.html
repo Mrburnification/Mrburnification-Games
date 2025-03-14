@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - MRBURNIFICATION GAMES</title>
+    <link href="../assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Your Game Analytics</h1>
+            <nav>
+                <a href="menu.html">Home</a>
+                <a href="profile.html">Profile</a>
+            </nav>
+        </header>
+        
+        <div class="analytics-container">
+            <div class="stats-card">
+                <h2>Your Stats</h2>
+                <div id="userStats">Loading...</div>
+            </div>
+            
+            <div class="stats-card">
+                <h2>Daily Challenge Leaderboard</h2>
+                <div id="leaderboard">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+        import { doc, getDoc, collection, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import firebaseConfig from '../assets/js/firebase-config.js';
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Load user stats
+        async function loadUserStats() {
+            const userEmail = localStorage.getItem("app_playerEmail");
+            if (!userEmail) return;
+            
+            try {
+                const userDoc = await getDoc(doc(db, "users", userEmail));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    document.getElementById("userStats").innerHTML = `
+                        <p>Games Played: ${userData.gamesPlayed || 0}</p>
+                        <p>Best Score: ${userData.bestScore !== undefined ? userData.bestScore : 'N/A'}</p>
+                        <p>Last Game: ${userData.lastGamePlayed ? new Date(userData.lastGamePlayed).toLocaleString() : 'N/A'}</p>
+                    `;
+                } else {
+                    document.getElementById("userStats").innerHTML = `<p>No stats available yet.</p>`;
+                }
+            } catch (error) {
+                console.error("Error loading user stats:", error);
+                document.getElementById("userStats").innerHTML = `<p>Error loading stats.</p>`;
+            }
+        }
+        
+        // Load leaderboard
+        async function loadLeaderboard() {
+            const today = new Date().toDateString();
+            try {
+                const q = query(
+                    collection(db, "dailyChallenges"),
+                    where("timestamp", ">=", new Date(today).toISOString()),
+                    orderBy("timestamp"),
+                    orderBy("score"),
+                    limit(10)
+                );
+                
+                const querySnapshot = await getDocs(q);
+                let leaderboardHTML = '<table><tr><th>Rank</th><th>Player</th><th>Score</th></tr>';
+                let rank = 1;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    leaderboardHTML += `
+                        <tr>
+                            <td>${rank}</td>
+                            <td>${data.email.split('@')[0]}</td>
+                            <td>${data.score}</td>
+                        </tr>
+                    `;
+                    rank++;
+                });
+                
+                leaderboardHTML += '</table>';
+                
+                if (rank === 1) {
+                    document.getElementById("leaderboard").innerHTML = `<p>No scores for today yet.</p>`;
+                } else {
+                    document.getElementById("leaderboard").innerHTML = leaderboardHTML;
+                }
+            } catch (error) {
+                console.error("Error loading leaderboard:", error);
+                document.getElementById("leaderboard").innerHTML = `<p>Error loading leaderboard.</p>`;
+            }
+        }
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserStats();
+            loadLeaderboard();
+        });
+    </script>
+</body>
+</html> 

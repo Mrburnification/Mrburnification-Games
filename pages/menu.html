@@ -3,106 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu - CyberGame Hub</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Menu - MRBURNIFICATION GAMES</title>
     <link href="../assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
-    <canvas id="matrixCanvas"></canvas>
-    <div class="cyber-grid"></div>
-    <nav class="navbar">
-        <div class="logo cyber-font">CYBERHUB</div>
-        <div class="nav-icons">
-            <div class="nav-item">
-                <i class="fas fa-user-astronaut nav-icon" onclick="showModal('profileModal')"></i>
-                <span class="nav-label">Profile</span>
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-chart-column nav-icon" onclick="showModal('analytics')"></i>
-                <span class="nav-label">Analytics</span>
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-users nav-icon" onclick="showModal('friends')"></i>
-                <span class="nav-label">Friends</span>
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-terminal nav-icon" onclick="showModal('readme')"></i>
-                <span class="nav-label">Docs</span>
-            </div>
-        </div>
-    </nav>
-    <div class="game-grid">
-        <div class="game-card" onclick="window.location.href='game_pre.html?game=Dot_Connect'">
-            <div class="game-media">
-                <img src="../assets/images/DOT_CONNECT.png" class="game-image" alt="Neon Invasion Thumbnail">
-                <img src="../assets/gifs/DOT_CONNECT.gif" class="game-gif" alt="Game Preview">
-            </div>
-            <div class="game-info">
-                <h3 class="game-title cyber-font">NEON INVASION</h3>
-                <p class="game-description">Defend the cyber-grid against rogue AI entities.</p>
-            </div>
-        </div>
-        <div class="game-card">
-            <div class="game-media">
-                <img src="../assets/images/DOT_CONNECT.png" class="game-image" alt="Neon Invasion Thumbnail">
-                <img src="../assets/gifs/DOT_CONNECT.gif" class="game-gif" alt="Game Preview">
-            </div>
-            <div class="game-info">
-                <h3 class="game-title cyber-font">NEON INVASION</h3>
-                <p class="game-description">Defend the cyber-grid against rogue AI entities.</p>
-            </div>
-        </div>
-        <div class="game-card">
-            <div class="game-media">
-                <img src="../assets/images/DOT_CONNECT.png" class="game-image" alt="Neon Invasion Thumbnail">
-                <img src="../assets/gifs/DOT_CONNECT.gif" class="game-gif" alt="Game Preview">
-            </div>
-            <div class="game-info">
-                <h3 class="game-title cyber-font">NEON INVASION</h3>
-                <p class="game-description">Defend the cyber-grid against rogue AI entities.</p>
-            </div>
-        </div>
-        <div class="game-card">
-            <div class="game-media">
-                <img src="../assets/images/DOT_CONNECT.png" class="game-image" alt="Neon Invasion Thumbnail">
-                <img src="../assets/gifs/DOT_CONNECT.gif" class="game-gif" alt="Game Preview">
-            </div>
-            <div class="game-info">
-                <h3 class="game-title cyber-font">NEON INVASION</h3>
-                <p class="game-description">Defend the cyber-grid against rogue AI entities.</p>
-            </div>
-        </div>
-            <!-- Profile Update Modal -->
-            <div id="profileModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeModal('profileModal')">&times;</span>
-                    <h2>Update Profile</h2>
-                    <label for="userName">Name:</label>
-                    <input type="text" id="userName" placeholder="Enter your new name">
-                    
-                    <label for="emojiPicker">Profile Picture:</label>
-                    <div id="emojiPicker" class="emoji-container"></div>
-                    
-                    <button onclick="saveProfileChanges()">Save Changes</button>
+    <div class="container">
+        <header>
+            <h1>MRBURNIFICATION GAMES</h1>
+            <nav>
+                <a href="profile.html">Profile</a>
+                <a href="dot_connect.html?mode=daily">Daily Challenge</a>
+                <a href="dot_connect.html?mode=practice">Practice Mode</a>
+                <a href="analytics.html">Analytics</a>
+            </nav>
+        </header>
+        
+        <div class="game-grid">
+            <div class="game-card" onclick="window.location.href='dot_connect.html?mode=daily'">
+                <div class="game-media">
+                    <img src="../assets/images/daily-challenge.jpg" alt="Daily Challenge" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">Daily Challenge</h3>
+                    <p class="game-description">Complete today's challenge and compare your score with others!</p>
                 </div>
             </div>
+            
+            <div class="game-card" onclick="window.location.href='dot_connect.html?mode=practice'">
+                <div class="game-media">
+                    <img src="../assets/images/practice-mode.jpg" alt="Practice Mode" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">Practice Mode</h3>
+                    <p class="game-description">Hone your skills with unlimited practice games.</p>
+                </div>
+            </div>
+            
+            <div class="game-card" onclick="window.location.href='profile.html'">
+                <div class="game-media">
+                    <img src="../assets/images/profile.jpg" alt="Profile" class="game-image">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">Your Profile</h3>
+                    <p class="game-description">View and edit your profile information.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="contact-footer hidden" id="contact-footer">
-        <a href="../pages/readme.html" class="nav-item">
-            <i class="fas fa-file-code nav-icon"></i>
-            <span class="nav-label">Readme</span>
-        </a>
-        <a href="../pages/contact.html" class="nav-item">
-            <i class="fas fa-envelope nav-icon"></i>
-            <span class="nav-label">Contact</span>
-        </a>
-    </div>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+        import firebaseConfig from '../assets/js/firebase-config.js';
 
-    <script src="../assets/js/matrixEffect.js"></script>
-    <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/analytics.js"></script>
-    <script src="../assets/js/googleSheets.js"></script>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Make Firebase instances available globally
+        window.db = db;
+        window.auth = auth;
+        
+        // Check if user is logged in
+        auth.onAuthStateChanged(user => {
+            if (!user && !localStorage.getItem("app_playerEmail")) {
+                // Redirect to login if not logged in
+                window.location.href = "../index.html";
+            }
+        });
+    </script>
 </body>
 </html>
