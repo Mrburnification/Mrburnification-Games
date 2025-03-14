@@ -2,6 +2,11 @@ const emojiBaseURL = "https://openmoji.org/data/color/svg/"; // Base URL for Ope
 const emojiList = ["1F604", "1F60D", "1F92A", "1F47D", "1F47E", "1F680", "1F525", "1F4A1"]; // Example emoji codes
 
 let selectedEmoji = "";  
+let isDailyChallenge = false;
+
+// Cache DOM elements
+const gameContainer = document.querySelector('.game-container');
+const dots = new Map(); // Store dot elements by their coordinates
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Document fully loaded.");
@@ -76,6 +81,94 @@ async function saveProfileChanges() {
     } catch (error) {
         alert("Network error: " + error.message);
     }
+}
+
+async function initializeGame(daily = false) {
+    try {
+        showLoadingSpinner();
+        
+        // Initialize game state
+        await loadGameData(daily);
+        
+        hideLoadingSpinner();
+    } catch (error) {
+        console.error('Game initialization failed:', error);
+        showErrorMessage('Failed to load game. Please try again.');
+    }
+}
+
+function endGame() {
+    // ... existing end game code ...
+    
+    if (isDailyChallenge) {
+        // Store completion date
+        localStorage.setItem('lastDailyChallenge', new Date().toDateString());
+    }
+}
+
+// Example Firebase structure
+const gameData = {
+    users: {
+        userId: {
+            profile: {
+                name: string,
+                joinDate: timestamp,
+                lastLogin: timestamp
+            },
+            dailyChallenges: {
+                [dateString]: {
+                    gameType: string,
+                    score: number,
+                    completionTime: timestamp
+                }
+            },
+            practiceGames: {
+                [gameId]: {
+                    gameType: string,
+                    score: number,
+                    timestamp: timestamp
+                }
+            }
+        }
+    },
+    dailyChallenges: {
+        [dateString]: {
+            gameType: string,
+            config: object,
+            topScores: array
+        }
+    }
+}
+
+function validateMove(start, end) {
+    // Ensure moves are valid
+    const dx = Math.abs(end.x - start.x);
+    const dy = Math.abs(end.y - start.y);
+    
+    // Check if move is within allowed distance
+    if (dx > 1 || dy > 1) {
+        return false;
+    }
+    
+    // Check if points are actually on the grid
+    if (!isValidGridPoint(start) || !isValidGridPoint(end)) {
+        return false;
+    }
+    
+    return true;
+}
+
+function createDot(x, y) {
+    if (dots.has(`${x},${y}`)) {
+        return dots.get(`${x},${y}`);
+    }
+    
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.style.left = `${x}%`;
+    dot.style.top = `${y}%`;
+    dots.set(`${x},${y}`, dot);
+    return dot;
 }
 
 

@@ -74,3 +74,26 @@ body {
     text-align: center;
     color: black; /* Keep the text black */
 }
+
+.game-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    aspect-ratio: 1;
+}
+
+.dot {
+    width: min(6vw, 30px);
+    height: min(6vw, 30px);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .dot {
+        width: 8vw;
+        height: 8vw;
+    }
+}
