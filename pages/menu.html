@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu - MRBURNIFICATION GAMES</title>
     <link href="../assets/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div id="matrix-bg"></div>
+    
     <div class="container">
         <header>
             <h1>MRBURNIFICATION GAMES</h1>
             <nav>
-                <a href="profile.html">Profile</a>
-                <a href="dot_connect.html?mode=daily">Daily Challenge</a>
-                <a href="dot_connect.html?mode=practice">Practice Mode</a>
-                <a href="analytics.html">Analytics</a>
+                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="dot_connect.html?mode=daily"><i class="fas fa-calendar-day"></i> Daily Challenge</a>
+                <a href="dot_connect.html?mode=practice"><i class="fas fa-gamepad"></i> Practice Mode</a>
+                <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
             </nav>
         </header>
         
         <div class="game-grid">
             <div class="game-card" onclick="window.location.href='dot_connect.html?mode=daily'">
                 <div class="game-media">
-                    <img src="../assets/images/daily-challenge.jpg" alt="Daily Challenge" class="game-image">
+                    <div class="game-icon"><i class="fas fa-calendar-day"></i></div>
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">Daily Challenge</h3>
@@ -31,7 +34,7 @@
             
             <div class="game-card" onclick="window.location.href='dot_connect.html?mode=practice'">
                 <div class="game-media">
-                    <img src="../assets/images/practice-mode.jpg" alt="Practice Mode" class="game-image">
+                    <div class="game-icon"><i class="fas fa-gamepad"></i></div>
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">Practice Mode</h3>
@@ -41,15 +44,32 @@
             
             <div class="game-card" onclick="window.location.href='profile.html'">
                 <div class="game-media">
-                    <img src="../assets/images/profile.jpg" alt="Profile" class="game-image">
+                    <div class="game-icon"><i class="fas fa-user"></i></div>
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">Your Profile</h3>
                     <p class="game-description">View and edit your profile information.</p>
                 </div>
             </div>
+            
+            <div class="game-card" onclick="window.location.href='analytics.html'">
+                <div class="game-media">
+                    <div class="game-icon"><i class="fas fa-chart-line"></i></div>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">Analytics</h3>
+                    <p class="game-description">View your stats and leaderboards.</p>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <footer class="cyber-footer">
+        <div class="contact-info">
+            <p>Contact: <a href="mailto:contact@mrburnification.com">contact@mrburnification.com</a></p>
+            <p>&copy; 2023 MRBURNIFICATION GAMES</p>
+        </div>
+    </footer>
 
     <!-- Firebase SDKs -->
     <script type="module">
@@ -75,5 +95,8 @@
             }
         });
     </script>
+    
+    <!-- Matrix background effect -->
+    <script src="../assets/js/matrix-bg.js"></script>
 </body>
 </html>

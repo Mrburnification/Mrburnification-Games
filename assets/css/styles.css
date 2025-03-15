@@ -763,13 +763,14 @@ header nav a:hover {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: rgba(10, 10, 15, 0.8);
+    background: rgba(10, 10, 15, 0.9);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 100;
     border-bottom: 2px solid var(--neon-blue);
+    height: 60px;
 }
 
 .game-header h1 {
@@ -801,9 +802,11 @@ header nav a:hover {
 
 canvas {
     display: block;
-    margin: 70px auto 0;
-    max-width: 100%;
-    max-height: calc(100vh - 100px);
+    margin: 80px auto 20px;
+    max-width: 95%;
+    max-height: calc(100vh - 120px);
+    border: 1px solid var(--neon-blue);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
 }
 
 .completion-screen {
@@ -858,4 +861,69 @@ canvas {
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
+}
+
+/* Matrix background */
+#matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+#matrix-bg canvas {
+    display: block;
+    margin: 0;
+    max-width: none;
+    max-height: none;
+}
+
+/* Footer styling */
+.cyber-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 15, 0.9);
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--neon-blue);
+    text-align: right;
+    font-size: 0.8rem;
+    z-index: 100;
+}
+
+.cyber-footer a {
+    color: var(--neon-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.cyber-footer a:hover {
+    color: var(--cyber-purple);
+    text-decoration: underline;
+}
+
+/* Game card icon styling */
+.game-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 5rem;
+    color: var(--neon-blue);
+}
+
+.game-card:hover .game-icon {
+    color: var(--cyber-purple);
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
+/* Nav icons */
+header nav a i, 
+.game-header nav a i {
+    margin-right: 0.5rem;
 }

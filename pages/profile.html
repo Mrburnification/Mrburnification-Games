@@ -5,21 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - MRBURNIFICATION GAMES</title>
     <link href="../assets/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div id="matrix-bg"></div>
+    
     <div class="container">
         <header>
             <h1>Your Profile</h1>
             <nav>
-                <a href="menu.html">Home</a>
-                <a href="analytics.html">Analytics</a>
+                <a href="menu.html"><i class="fas fa-home"></i> Home</a>
+                <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
             </nav>
         </header>
         
         <div class="profile-container">
             <div class="profile-image-container">
                 <img id="profileImage" src="" alt="Profile Image">
-                <button id="changeImageBtn">Change Image</button>
+                <button id="changeImageBtn"><i class="fas fa-camera"></i> Change</button>
             </div>
             
             <div class="profile-details">
@@ -34,7 +37,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <button id="saveProfileBtn">Save Changes</button>
+                    <button id="saveProfileBtn"><i class="fas fa-save"></i> Save Changes</button>
                 </div>
             </div>
         </div>
@@ -43,6 +46,13 @@
             <!-- Emojis will be loaded here -->
         </div>
     </div>
+    
+    <footer class="cyber-footer">
+        <div class="contact-info">
+            <p>Contact: <a href="mailto:contact@mrburnification.com">contact@mrburnification.com</a></p>
+            <p>&copy; 2023 MRBURNIFICATION GAMES</p>
+        </div>
+    </footer>
 
     <!-- Firebase SDKs -->
     <script type="module">
@@ -62,5 +72,8 @@
     </script>
     
     <script type="module" src="../assets/js/profile.js"></script>
+    
+    <!-- Matrix background effect -->
+    <script src="../assets/js/matrix-bg.js"></script>
 </body>
 </html> 
