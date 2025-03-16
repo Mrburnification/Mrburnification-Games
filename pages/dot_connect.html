@@ -13,7 +13,10 @@
     <div id="matrix-bg"></div>
     
     <header class="game-header">
-        <h1>DOT CONNECT</h1>
+        <div class="header-left">
+            <h1>DOT CONNECT</h1>
+            <div id="modeIndicator" class="mode-badge"></div>
+        </div>
         <nav>
             <a href="menu.html"><i class="fas fa-home"></i> Home</a>
             <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
@@ -21,18 +24,18 @@
         </nav>
     </header>
 
-    <div class="game-container">
-        <canvas id="defaultCanvas0"></canvas>
-        <div class="game-overlay">
-            <div id="gameUI" class="cyber-ui">
-                <div class="score-box">
-                    <span id="timer">00.00s</span>
-                    <span id="penalty">+0.00s</span>
-                </div>
-                <div id="modeIndicator" class="cyber-font"></div>
+    <main class="game-main">
+        <div id="game-canvas-container" class="game-canvas-container">
+            <!-- p5.js will create the canvas here -->
+        </div>
+        
+        <div class="game-ui">
+            <div class="score-box">
+                <span id="timer">00.00s</span>
+                <span id="penalty">+0.00s</span>
             </div>
         </div>
-    </div>
+    </main>
     
     <footer class="cyber-footer">
         <div class="contact-info">
@@ -57,6 +60,19 @@
         // Make Firebase instances available globally
         window.db = db;
         window.auth = auth;
+        
+        // Set game mode indicator
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode') || 'practice';
+        const modeIndicator = document.getElementById('modeIndicator');
+        
+        if (mode === 'daily') {
+            modeIndicator.textContent = 'DAILY CHALLENGE';
+            modeIndicator.classList.add('daily-mode');
+        } else {
+            modeIndicator.textContent = 'PRACTICE MODE';
+            modeIndicator.classList.add('practice-mode');
+        }
     </script>
 
     <!-- Game script -->

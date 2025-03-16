@@ -18,10 +18,49 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function() {
     console.log("Document fully loaded.");
     loadEmojis();
     testFirebase();
+    
+    // Check if this is daily challenge mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    
+    if (mode === 'daily') {
+        // Set indicator
+        document.getElementById('modeIndicator').textContent = 'DAILY CHALLENGE';
+        document.getElementById('modeIndicator').classList.add('daily-mode');
+        
+        // Check if user has already completed today's challenge
+        const user = auth.currentUser;
+        let email;
+        
+        if (user) {
+            email = user.email;
+        } else {
+            email = localStorage.getItem("app_playerEmail");
+            if (!email) {
+                alert("Please log in to play the daily challenge");
+                window.location.href = '../index.html';
+                return;
+            }
+        }
+        
+        try {
+            const result = await checkDailyChallenge(email);
+            if (result.hasPlayed) {
+                showCompletionScreen(result.score, false);
+                return;
+            }
+        } catch (error) {
+            console.error("Error checking daily challenge:", error);
+        }
+    } else {
+        // Practice mode
+        document.getElementById('modeIndicator').textContent = 'PRACTICE MODE';
+        document.getElementById('modeIndicator').classList.add('practice-mode');
+    }
 });
 
 function showModal(modalId) {

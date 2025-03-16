@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Only initialize matrix on specific pages
+    const currentPage = window.location.pathname;
+    const matrixPages = [
+        '/pages/menu.html',
+        '/pages/profile.html',
+        '/pages/analytics.html'
+    ];
+    
+    // Check if we should show matrix on this page
+    const shouldShowMatrix = matrixPages.some(page => currentPage.endsWith(page));
+    if (!shouldShowMatrix) return;
+    
     const canvas = document.createElement('canvas');
     const matrixBg = document.getElementById('matrix-bg');
     matrixBg.appendChild(canvas);
@@ -27,11 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Drawing function
     function draw() {
         // Set semi-transparent black background to create trail effect
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        // More transparent background for subtlety
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Set text color and font
-        ctx.fillStyle = '#0f0'; // Matrix green
+        // Set text color and font - more transparent green
+        ctx.fillStyle = 'rgba(0, 255, 0, 0.3)'; // More transparent Matrix green
         ctx.font = `${fontSize}px monospace`;
         
         // Draw characters
