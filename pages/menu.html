@@ -10,17 +10,29 @@
 <body>
     <div id="matrix-bg"></div>
     
-    <div class="container">
-        <header>
-            <h1>MRBURNIFICATION GAMES</h1>
-            <nav>
-                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
-                <a href="dot_connect.html?mode=daily"><i class="fas fa-calendar-day"></i> Daily Challenge</a>
-                <a href="dot_connect.html?mode=practice"><i class="fas fa-gamepad"></i> Practice Mode</a>
-                <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
-            </nav>
-        </header>
-        
+    <header>
+        <h1>MRBURNIFICATION GAMES</h1>
+        <nav class="nav-icons">
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user nav-icon"></i>
+                <span class="nav-label">Profile</span>
+            </a>
+            <a href="dot_connect.html?mode=daily" class="nav-item">
+                <i class="fas fa-calendar-day nav-icon"></i>
+                <span class="nav-label">Daily Challenge</span>
+            </a>
+            <a href="dot_connect.html?mode=practice" class="nav-item">
+                <i class="fas fa-gamepad nav-icon"></i>
+                <span class="nav-label">Practice Mode</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <i class="fas fa-chart-line nav-icon"></i>
+                <span class="nav-label">Analytics</span>
+            </a>
+        </nav>
+    </header>
+    
+    <main class="container">
         <div class="game-grid">
             <div class="game-card" onclick="window.location.href='dot_connect.html?mode=daily'">
                 <div class="game-media">
@@ -95,7 +107,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
     
     <footer class="cyber-footer">
         <div class="contact-info">

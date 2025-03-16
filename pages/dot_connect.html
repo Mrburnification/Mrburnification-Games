@@ -18,21 +18,23 @@
             <div id="modeIndicator" class="mode-badge"></div>
         </div>
         <nav>
-            <a href="menu.html"><i class="fas fa-home"></i> Home</a>
-            <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
-            <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+            <a href="menu.html"><i class="fas fa-home"></i> <span>Home</span></a>
+            <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
+            <a href="profile.html"><i class="fas fa-user"></i> <span>Profile</span></a>
         </nav>
     </header>
 
     <main class="game-main">
-        <div id="game-canvas-container" class="game-canvas-container">
-            <!-- p5.js will create the canvas here -->
+        <div class="score-container">
+            <div class="score-display">
+                <div id="currentScore" class="score-box">Score: <span id="timer">00.00s</span></div>
+                <div id="finalScore" class="score-box">Final Score: <span id="finalTimer">00.00s</span></div>
+            </div>
         </div>
         
-        <div class="game-ui">
-            <div class="score-box">
-                <span id="timer">00.00s</span>
-                <span id="penalty">+0.00s</span>
+        <div class="canvas-wrapper">
+            <div id="game-canvas-container" class="game-canvas-container">
+                <!-- p5.js will create the canvas here -->
             </div>
         </div>
     </main>

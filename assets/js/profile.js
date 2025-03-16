@@ -111,4 +111,80 @@ async function saveProfile() {
         console.error("Error updating profile:", error);
         alert("Error updating profile");
     }
-} 
+}
+
+// Function to save user profile
+async function saveUserProfile(email, profileData) {
+    try {
+        await setDoc(doc(db, "userProfiles", email), profileData, { merge: true });
+        console.log("Profile saved successfully");
+        
+        // Save selected emoji to localStorage as well for redundancy
+        if (profileData.selectedEmoji) {
+            localStorage.setItem("user_selectedEmoji", profileData.selectedEmoji);
+        }
+        
+        return true;
+    } catch (error) {
+        console.error("Error saving profile:", error);
+        return false;
+    }
+}
+
+// Function to load user profile
+async function loadUserProfile(email) {
+    try {
+        const docRef = doc(db, "userProfiles", email);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            console.log("Profile loaded:", data);
+            
+            // Also save to localStorage for redundancy
+            if (data.selectedEmoji) {
+                localStorage.setItem("user_selectedEmoji", data.selectedEmoji);
+            }
+            
+            return data;
+        } else {
+            console.log("No profile found");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error loading profile:", error);
+        return null;
+    }
+}
+
+// Function to display user emoji
+function displayUserEmoji() {
+    // Try to get from localStorage first (faster)
+    const storedEmoji = localStorage.getItem("user_selectedEmoji");
+    
+    if (storedEmoji) {
+        // Update UI with stored emoji
+        const emojiDisplay = document.getElementById("userEmojiDisplay");
+        if (emojiDisplay) {
+            emojiDisplay.src = `https://openmoji.org/data/color/svg/${storedEmoji}.svg`;
+        }
+    }
+    
+    // Then try to get from Firestore (more authoritative)
+    const email = localStorage.getItem("app_playerEmail");
+    if (email) {
+        loadUserProfile(email).then(profile => {
+            if (profile && profile.selectedEmoji) {
+                const emojiDisplay = document.getElementById("userEmojiDisplay");
+                if (emojiDisplay) {
+                    emojiDisplay.src = `https://openmoji.org/data/color/svg/${profile.selectedEmoji}.svg`;
+                }
+            }
+        });
+    }
+}
+
+// Call this function when the page loads
+document.addEventListener("DOMContentLoaded", function() {
+    displayUserEmoji();
+}); 

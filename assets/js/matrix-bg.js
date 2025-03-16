@@ -13,55 +13,52 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const canvas = document.createElement('canvas');
     const matrixBg = document.getElementById('matrix-bg');
+    
+    if (!matrixBg) return;
+    
     matrixBg.appendChild(canvas);
     
     const ctx = canvas.getContext('2d');
     
-    // Make canvas full screen
+    // Make canvas full viewport size
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Characters to display
-    const chars = "01";
+    // Characters to use
+    const chars = '01'.split('');
     
-    // Font size and columns
+    // Column settings
     const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = [];
     
-    // Array to track the y position of each column
-    const drops = [];
-    
-    // Initialize all columns to start at random positions
+    // Initialize drops
     for (let i = 0; i < columns; i++) {
-        drops[i] = Math.random() * -100;
+        drops[i] = Math.floor(Math.random() * -canvas.height / fontSize);
     }
     
     // Drawing function
     function draw() {
-        // Set semi-transparent black background to create trail effect
-        // More transparent background for subtlety
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
+        // Semi-transparent black to create fade effect - reduced opacity
+        ctx.fillStyle = 'rgba(10, 10, 15, 0.03)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Set text color and font - more transparent green
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.3)'; // More transparent Matrix green
-        ctx.font = `${fontSize}px monospace`;
+        // Reduced opacity for the characters
+        ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
+        ctx.font = fontSize + 'px monospace';
         
-        // Draw characters
         for (let i = 0; i < drops.length; i++) {
             // Random character
-            const char = chars.charAt(Math.floor(Math.random() * chars.length));
+            const char = chars[Math.floor(Math.random() * chars.length)];
             
-            // Draw character
+            // Draw the character
             ctx.fillText(char, i * fontSize, drops[i] * fontSize);
             
             // Move drop down
-            drops[i]++;
-            
-            // Reset drop to top with random delay when it reaches bottom
             if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
                 drops[i] = 0;
             }
+            drops[i]++;
         }
     }
     
@@ -70,19 +67,20 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         
-        // Recalculate columns
+        // Adjust columns
         const newColumns = Math.floor(canvas.width / fontSize);
         
-        // Adjust drops array
         if (newColumns > columns) {
-            // Add new columns
+            // Add more columns
             for (let i = columns; i < newColumns; i++) {
-                drops[i] = Math.random() * -100;
+                drops[i] = Math.floor(Math.random() * -canvas.height / fontSize);
             }
         } else {
             // Remove excess columns
             drops.length = newColumns;
         }
+        
+        columns = newColumns;
     });
     
     // Run animation
