@@ -34,10 +34,6 @@ body {
 
 /* Navbar Styles */
 .navbar, header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     z-index: 1000;
     background: rgba(10, 10, 15, 0.95);
     padding: 0.75rem;
@@ -387,7 +383,7 @@ button:hover {
     }
     
     main, .container, .game-main {
-        padding-top: 60px; /* Less space needed for header */
+        padding-top: 0px; /* Less space needed for header */
     }
     
     .game-card {
@@ -613,13 +609,13 @@ body {
 
 .game-canvas-container {
     width: 100%;
-    height: 70vh; /* Set a fixed height relative to viewport */
+    height: calc(100vh - 220px); /* Adjust height to fit screen without scrolling */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 1rem auto;
+    margin: 0.5rem auto;
     position: relative;
-    max-width: 100%;
+    max-width: 1000px; /* Set maximum width to 1000px */
     background: rgba(10, 10, 15, 0.3);
     border-radius: 8px;
     overflow: hidden;
@@ -691,7 +687,7 @@ body {
 
 /* Ensure game-main has proper layout */
 .game-main {
-    padding-top: 80px;
+    padding-top: 0px;
     padding-bottom: 60px;
     min-height: calc(100vh - 140px);
     display: flex;
@@ -924,8 +920,8 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem;
-    padding-top: 80px; /* Space for header */
-    padding-bottom: 20px; /* Reduced padding */
+    padding-top: 0px; /* Space for header */
+    padding-bottom: 0px; /* Reduced padding */
     overflow-y: visible; /* Allow content to determine scrolling */
 }
 
@@ -1051,7 +1047,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem;
-    padding-top: 80px; /* Space for header */
+    padding-top: 0px; /* Space for header */
     padding-bottom: 20px;
     overflow-y: visible; /* Allow content to determine scrolling */
 }
@@ -1400,7 +1396,7 @@ body {
 }
 
 main, .container, .game-main {
-    padding-top: 80px; /* Space for fixed header */
+    padding-top: 0px; /* Space for fixed header */
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -1803,7 +1799,7 @@ canvas {
 
 /* Game container with proper spacing */
 .game-container {
-    padding-top: 70px; /* Space for fixed header */
+    padding-top: 0px; /* Space for fixed header */
     width: 100%;
     max-width: 100%;
     margin: 0;
@@ -1811,7 +1807,6 @@ canvas {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    min-height: calc(100vh - 50px); /* Account for footer */
     position: relative;
 }
 
@@ -1832,7 +1827,7 @@ canvas {
     align-items: center;
     margin: 0.5rem auto;
     position: relative;
-    max-width: 100%;
+    max-width: 1000px; /* Set maximum width to 1000px */
     background: rgba(10, 10, 15, 0.3);
     border-radius: 8px;
     overflow: hidden;
@@ -1879,7 +1874,7 @@ canvas {
 }
 
 .daily-mode {
-    background: rgba(188, 19, 254, 0.2);
+    background: rgba(165, 162, 15, 0.2);
     color: var(--cyber-purple);
     border: 1px solid var(--cyber-purple);
 }

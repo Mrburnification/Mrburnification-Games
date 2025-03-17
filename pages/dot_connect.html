@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dot Connect - MRBURNIFICATION GAMES</title>
     <link href="../assets/css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
@@ -13,7 +12,7 @@
     <div id="matrix-bg"></div>
     
     <header>
-        <h1>MRBURNIFICATION GAMES</h1>
+        <h1>Dot Connect </h1>
         <nav class="nav-icons">
             <a href="menu.html" class="nav-item">
                 <i class="fas fa-home nav-icon"></i>
@@ -35,43 +34,26 @@
     </header>
     
     <div class="game-container">
-        <div class="game-header">
-            <div class="game-title">
-                <h2>Dot Connect</h2>
-                <span id="modeIndicator" class="mode-indicator">PRACTICE MODE</span>
-            </div>
-            <div class="game-stats">
-                <div class="timer">
-                    <i class="fas fa-clock"></i>
-                    <span id="timer">00.00s</span>
-                </div>
-                <div class="penalty">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span id="penalty">+0.00s</span>
-                </div>
-            </div>
-        </div>
         
         <div id="gameCanvas" class="game-canvas-container">
             <!-- p5.js canvas will be inserted here -->
         </div>
-        
+        <div class="game-stats">
+          <div class="timer">
+              <i class="fas fa-clock"></i>
+              <span id="timer">00.00s</span>
+          </div>
+          <div class="penalty">
+              <i class="fas fa-tachometer-alt"></i>
+              <span id="penalty">+0.00s</span>
+          </div>
+      </div>
         <div class="game-ui">
             <div class="game-instructions">
                 <p>Connect all dots to complete the puzzle. Drag from one dot to another to create connections.</p>
             </div>
-            <button id="resetBtn" class="btn btn-primary" onclick="resetGame()">
-                <i class="fas fa-redo"></i> Reset Game
-            </button>
         </div>
     </div>
-    
-    <footer class="cyber-footer game-footer">
-        <div class="contact-info">
-            <p>Contact: <a href="mailto:contact@mrburnification.com">contact@mrburnification.com</a></p>
-            <p>&copy; 2023 MRBURNIFICATION GAMES</p>
-        </div>
-    </footer>
 
     <!-- Firebase SDKs -->
     <script type="module">
@@ -101,7 +83,5 @@
     <!-- Game script -->
     <script src="../assets/js/dot-connect.js"></script>
     
-    <!-- Matrix background effect -->
-    <script src="../assets/js/matrix-bg.js"></script>
 </body>
 </html>
