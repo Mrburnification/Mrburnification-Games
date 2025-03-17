@@ -7,76 +7,97 @@
     <title>Dot Connect - MRBURNIFICATION GAMES</title>
     <link href="../assets/css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
 </head>
 <body>
     <div id="matrix-bg"></div>
     
-    <header class="game-header">
-        <div class="header-left">
-            <h1>DOT CONNECT</h1>
-            <div id="modeIndicator" class="mode-badge"></div>
-        </div>
-        <nav>
-            <a href="menu.html"><i class="fas fa-home"></i> <span>Home</span></a>
-            <a href="analytics.html"><i class="fas fa-chart-line"></i> <span>Analytics</span></a>
-            <a href="profile.html"><i class="fas fa-user"></i> <span>Profile</span></a>
+    <header>
+        <h1>MRBURNIFICATION GAMES</h1>
+        <nav class="nav-icons">
+            <a href="menu.html" class="nav-item">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user nav-icon"></i>
+                <span class="nav-label">Profile</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <i class="fas fa-chart-line nav-icon"></i>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="friends.html" class="nav-item">
+                <i class="fas fa-users nav-icon"></i>
+                <span class="nav-label">Friends</span>
+            </a>
         </nav>
     </header>
-
-    <main class="game-main">
-        <div class="score-container">
-            <div class="score-display">
-                <div id="currentScore" class="score-box">Score: <span id="timer">00.00s</span></div>
-                <div id="finalScore" class="score-box">Final Score: <span id="finalTimer">00.00s</span></div>
+    
+    <div class="game-container">
+        <div class="game-header">
+            <div class="game-title">
+                <h2>Dot Connect</h2>
+                <span id="modeIndicator" class="mode-indicator">PRACTICE MODE</span>
+            </div>
+            <div class="game-stats">
+                <div class="timer">
+                    <i class="fas fa-clock"></i>
+                    <span id="timer">00.00s</span>
+                </div>
+                <div class="penalty">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span id="penalty">+0.00s</span>
+                </div>
             </div>
         </div>
         
-        <div class="canvas-wrapper">
-            <div id="game-canvas-container" class="game-canvas-container">
-                <!-- p5.js will create the canvas here -->
-            </div>
+        <div id="gameCanvas" class="game-canvas-container">
+            <!-- p5.js canvas will be inserted here -->
         </div>
-    </main>
+        
+        <div class="game-ui">
+            <div class="game-instructions">
+                <p>Connect all dots to complete the puzzle. Drag from one dot to another to create connections.</p>
+            </div>
+            <button id="resetBtn" class="btn btn-primary" onclick="resetGame()">
+                <i class="fas fa-redo"></i> Reset Game
+            </button>
+        </div>
+    </div>
     
-    <footer class="cyber-footer">
+    <footer class="cyber-footer game-footer">
         <div class="contact-info">
             <p>Contact: <a href="mailto:contact@mrburnification.com">contact@mrburnification.com</a></p>
             <p>&copy; 2023 MRBURNIFICATION GAMES</p>
         </div>
     </footer>
 
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
         import firebaseConfig from '../assets/js/firebase-config.js';
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const analytics = getAnalytics(app);
 
         // Make Firebase instances available globally
         window.db = db;
         window.auth = auth;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
         
-        // Set game mode indicator
-        const urlParams = new URLSearchParams(window.location.search);
-        const mode = urlParams.get('mode') || 'practice';
-        const modeIndicator = document.getElementById('modeIndicator');
-        
-        if (mode === 'daily') {
-            modeIndicator.textContent = 'DAILY CHALLENGE';
-            modeIndicator.classList.add('daily-mode');
-        } else {
-            modeIndicator.textContent = 'PRACTICE MODE';
-            modeIndicator.classList.add('practice-mode');
-        }
+        // Import functions from main.js
+        import { submitDailyChallenge, showCompletionScreen } from '../assets/js/main.js';
+        window.submitDailyChallenge = submitDailyChallenge;
+        window.showCompletionScreen = showCompletionScreen;
     </script>
-
+    
     <!-- Game script -->
     <script src="../assets/js/dot-connect.js"></script>
     

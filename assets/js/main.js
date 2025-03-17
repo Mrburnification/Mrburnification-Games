@@ -164,26 +164,18 @@ async function initializeGame(daily = false) {
     startGame(daily);
 }
 
-function showCompletionScreen(score, isFirstTime = true) {
-    // Hide game container
-    const gameContainer = document.querySelector('.game-container');
-    if (gameContainer) gameContainer.style.display = 'none';
-    
-    // Create and show completion screen
+function showCompletionScreen(score, isNewScore) {
     const completionScreen = document.createElement('div');
     completionScreen.className = 'completion-screen';
     
-    let message = isFirstTime ? 
-        `<h2>Daily Challenge Completed!</h2><p>Your score: ${score}</p>` : 
-        `<h2>You've already completed today's challenge</h2><p>Your score: ${score}</p><p>Want to practice more?</p>`;
-    
     completionScreen.innerHTML = `
-        ${message}
+        <h2>Game Complete!</h2>
+        <p>Your score: <span class="highlight">${score}</span></p>
+        ${isNewScore ? '<p class="success-message">Your score has been saved!</p>' : '<p>You\'ve already completed today\'s challenge.</p>'}
         <div class="completion-buttons">
-            <button onclick="window.location.href='dot_connect.html?mode=practice'">Practice Mode</button>
             <button onclick="window.location.href='menu.html'">Home</button>
             <button onclick="window.location.href='analytics.html'">View Analytics</button>
-            <button onclick="window.location.href='friends.html'">View Analytics</button>
+            <button onclick="window.location.href='friends.html'">View Friends</button>
         </div>
     `;
     
@@ -200,7 +192,7 @@ async function endGame(score) {
             await fetch(submitUrl);
             
             // Show completion screen
-            showCompletionScreen(score);
+            showCompletionScreen(score, true);
         } catch (error) {
             console.error('Error submitting daily challenge:', error);
             alert('Error submitting score. Please try again.');

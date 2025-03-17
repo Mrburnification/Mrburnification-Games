@@ -47,23 +47,18 @@ function loadEmojis() {
 }
 
 async function loadUserProfile() {
-    const user = auth.currentUser;
-    let email;
+    const email = localStorage.getItem("app_playerEmail");
     
-    if (user) {
-        email = user.email;
-    } else {
-        email = localStorage.getItem("app_playerEmail");
-        if (!email) {
-            alert("You need to be logged in to view your profile");
-            window.location.href = "../index.html";
-            return;
-        }
+    if (!email) {
+        alert("You need to be logged in to view your profile");
+        window.location.href = "../index.html";
+        return;
     }
     
     try {
-        const docRef = doc(db, "users", email);
-        const docSnap = await getDoc(docRef);
+        // Make sure we're using the global doc function from Firebase
+        const docRef = window.doc(window.db, "users", email);
+        const docSnap = await window.getDoc(docRef);
         
         if (docSnap.exists()) {
             const userData = docSnap.data();
