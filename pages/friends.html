@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends - MRBURNIFICATION GAMES</title>
+    <link href="../assets/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="matrix-bg"></div>
+    
+    <header>
+        <h1>MRBURNIFICATION GAMES</h1>
+        <nav class="nav-icons">
+            <a href="menu.html" class="nav-item">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fas fa-user nav-icon"></i>
+                <span class="nav-label">Profile</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <i class="fas fa-chart-line nav-icon"></i>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="friends.html" class="nav-item">
+                <i class="fas fa-users nav-icon"></i>
+                <span class="nav-label">Friends</span>
+            </a>
+        </nav>
+    </header>
+    
+    <main class="container">
+        <div class="friends-container">
+            <div class="friends-header">
+                <h2 class="friends-title">Your Friends</h2>
+                <p>Connect with other players and challenge them to games!</p>
+            </div>
+            
+            <div class="friends-actions">
+                <div class="search-box">
+                    <input type="text" id="friendSearch" placeholder="Search for players..." class="form-control">
+                    <button id="searchBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                
+                <button id="addFriendBtn" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Add Friend
+                </button>
+            </div>
+            
+            <div class="friends-tabs">
+                <button class="tab-btn active" data-tab="friends">Friends</button>
+                <button class="tab-btn" data-tab="requests">Friend Requests <span class="badge">0</span></button>
+                <button class="tab-btn" data-tab="pending">Pending <span class="badge">0</span></button>
+            </div>
+            
+            <div class="tab-content active" id="friends-tab">
+                <div class="friends-list">
+                    <div class="empty-state">
+                        <i class="fas fa-users empty-icon"></i>
+                        <h3>No Friends Yet</h3>
+                        <p>Search for players to add them as friends!</p>
+                    </div>
+                    
+                    <!-- Friend entries will be added here dynamically -->
+                    <!-- Example friend entry:
+                    <div class="friend-card">
+                        <div class="friend-avatar">
+                            <img src="https://openmoji.org/data/color/svg/1F60E.svg" alt="Friend Avatar">
+                        </div>
+                        <div class="friend-info">
+                            <h3 class="friend-name">CyberGamer42</h3>
+                            <p class="friend-status online">Online</p>
+                        </div>
+                        <div class="friend-actions">
+                            <button class="btn-icon" title="Challenge to a game">
+                                <i class="fas fa-gamepad"></i>
+                            </button>
+                            <button class="btn-icon" title="Send message">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="btn-icon danger" title="Remove friend">
+                                <i class="fas fa-user-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="requests-tab">
+                <div class="friends-list">
+                    <div class="empty-state">
+                        <i class="fas fa-user-clock empty-icon"></i>
+                        <h3>No Friend Requests</h3>
+                        <p>You don't have any pending friend requests.</p>
+                    </div>
+                    
+                    <!-- Friend request entries will be added here dynamically -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="pending-tab">
+                <div class="friends-list">
+                    <div class="empty-state">
+                        <i class="fas fa-hourglass-half empty-icon"></i>
+                        <h3>No Pending Requests</h3>
+                        <p>You haven't sent any friend requests that are pending.</p>
+                    </div>
+                    
+                    <!-- Pending request entries will be added here dynamically -->
+                </div>
+            </div>
+            
+            <div class="coming-soon-notice">
+                <div class="cyber-badge">
+                    <i class="fas fa-code"></i> In Development
+                </div>
+                <p>The friends feature is currently under development. Check back soon for updates!</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="cyber-footer">
+        <div class="contact-info">
+            <p>Contact: <a href="mailto:contact@mrburnification.com">contact@mrburnification.com</a></p>
+            <p>&copy; 2023 MRBURNIFICATION GAMES</p>
+        </div>
+    </footer>
+
+    <!-- Add Friend Modal -->
+    <div id="addFriendModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Friend</h3>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Enter the email or username of the player you want to add:</p>
+                <input type="text" id="friendEmail" class="form-control" placeholder="Email or username">
+                <div class="modal-actions">
+                    <button id="sendRequestBtn" class="btn btn-primary">Send Request</button>
+                    <button id="cancelRequestBtn" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+        import firebaseConfig from '../assets/js/firebase-config.js';
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Make Firebase instances available globally
+        window.db = db;
+        window.auth = auth;
+        
+        // Check if user is logged in
+        auth.onAuthStateChanged(user => {
+            if (!user && !localStorage.getItem("app_playerEmail")) {
+                // Redirect to login if not logged in
+                window.location.href = "../index.html";
+            }
+        });
+    </script>
+    
+    <!-- Friends page script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons and contents
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Modal functionality
+            const addFriendBtn = document.getElementById('addFriendBtn');
+            const addFriendModal = document.getElementById('addFriendModal');
+            const closeBtn = document.querySelector('.close-btn');
+            const cancelBtn = document.getElementById('cancelRequestBtn');
+            
+            addFriendBtn.addEventListener('click', function() {
+                addFriendModal.style.display = 'flex';
+            });
+            
+            function closeModal() {
+                addFriendModal.style.display = 'none';
+            }
+            
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === addFriendModal) {
+                    closeModal();
+                }
+            });
+            
+            // Placeholder for send request functionality
+            document.getElementById('sendRequestBtn').addEventListener('click', function() {
+                const friendEmail = document.getElementById('friendEmail').value;
+                if (friendEmail) {
+                    alert(`Friend request functionality is coming soon! You tried to add: ${friendEmail}`);
+                    closeModal();
+                } else {
+                    alert('Please enter an email or username');
+                }
+            });
+        });
+    </script>
+    
+    <!-- Matrix background effect -->
+    <script src="../assets/js/matrix-bg.js"></script>
+</body>
+</html> 

@@ -183,6 +183,7 @@ function showCompletionScreen(score, isFirstTime = true) {
             <button onclick="window.location.href='dot_connect.html?mode=practice'">Practice Mode</button>
             <button onclick="window.location.href='menu.html'">Home</button>
             <button onclick="window.location.href='analytics.html'">View Analytics</button>
+            <button onclick="window.location.href='friends.html'">View Analytics</button>
         </div>
     `;
     

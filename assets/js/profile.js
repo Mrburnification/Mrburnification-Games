@@ -1,5 +1,4 @@
-import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
-
+// Global variables
 const emojiBaseURL = "https://openmoji.org/data/color/svg/";
 const emojiList = ["1F604", "1F60D", "1F92A", "1F47D", "1F47E", "1F680", "1F525", "1F4A1"];
 let selectedEmoji = "";
