@@ -10,42 +10,57 @@
 <body>
     <div id="matrix-bg"></div>
     
-    <div class="container">
-        <header>
-            <h1>Your Profile</h1>
-            <nav>
-                <a href="menu.html"><i class="fas fa-home"></i> Home</a>
-                <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
-            </nav>
-        </header>
-        
+    <header>
+        <h1>MRBURNIFICATION GAMES</h1>
+        <nav class="nav-icons">
+            <a href="menu.html" class="nav-item">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="dot_connect.html?mode=daily" class="nav-item">
+                <i class="fas fa-calendar-day nav-icon"></i>
+                <span class="nav-label">Daily Challenge</span>
+            </a>
+            <a href="dot_connect.html?mode=practice" class="nav-item">
+                <i class="fas fa-gamepad nav-icon"></i>
+                <span class="nav-label">Practice Mode</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <i class="fas fa-chart-line nav-icon"></i>
+                <span class="nav-label">Analytics</span>
+            </a>
+        </nav>
+    </header>
+    
+    <main class="container">
         <div class="profile-container">
-            <div class="profile-image-container">
-                <img id="profileImage" src="" alt="Profile Image">
-                <button id="changeImageBtn"><i class="fas fa-camera"></i> Change</button>
-            </div>
-            
-            <div class="profile-details">
-                <div class="form-group">
-                    <label for="displayName">Display Name</label>
-                    <input type="text" id="displayName" placeholder="Your display name">
+            <div class="profile-header">
+                <div class="profile-image-container">
+                    <img id="profileImage" src="https://openmoji.org/data/color/svg/1F604.svg" alt="Profile Image">
+                    <button id="changeImageBtn" title="Change Image">
+                        <i class="fas fa-camera"></i>
+                    </button>
                 </div>
                 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <button id="saveProfileBtn"><i class="fas fa-save"></i> Save Changes</button>
+                <div class="profile-details">
+                    <h2 class="profile-name">Your Profile</h2>
+                    <div class="profile-form">
+                        <div class="form-group">
+                            <label for="displayName">Display Name</label>
+                            <input type="text" id="displayName" class="form-control" placeholder="Enter your display name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" class="form-control" readonly>
+                        </div>
+                        
+                        <button id="saveProfileBtn" class="btn btn-primary">Save Profile</button>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div id="emojiPicker" class="emoji-picker">
-            <!-- Emojis will be loaded here -->
-        </div>
-    </div>
+    </main>
     
     <footer class="cyber-footer">
         <div class="contact-info">
@@ -57,7 +72,7 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
         import firebaseConfig from '../assets/js/firebase-config.js';
 
@@ -69,9 +84,13 @@
         // Make Firebase instances available globally
         window.db = db;
         window.auth = auth;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
     </script>
     
-    <script type="module" src="../assets/js/profile.js"></script>
+    <!-- Profile script -->
+    <script src="../assets/js/profile.js"></script>
     
     <!-- Matrix background effect -->
     <script src="../assets/js/matrix-bg.js"></script>

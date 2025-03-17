@@ -4,16 +4,28 @@ const emojiBaseURL = "https://openmoji.org/data/color/svg/";
 const emojiList = ["1F604", "1F60D", "1F92A", "1F47D", "1F47E", "1F680", "1F525", "1F4A1"];
 let selectedEmoji = "";
 
-document.addEventListener("DOMContentLoaded", async function() {
-    loadEmojis();
-    await loadUserProfile();
+document.addEventListener("DOMContentLoaded", function() {
+    // Check if user is logged in
+    const email = localStorage.getItem("app_playerEmail");
+    if (!email) {
+        window.location.href = "../index.html";
+        return;
+    }
     
-    document.getElementById("changeImageBtn").addEventListener("click", function() {
-        const emojiPicker = document.getElementById("emojiPicker");
-        emojiPicker.style.display = emojiPicker.style.display === "block" ? "none" : "block";
-    });
+    // Load user profile
+    loadUserProfile();
     
+    // Set up event listeners
+    document.getElementById("changeImageBtn").addEventListener("click", openEmojiPicker);
     document.getElementById("saveProfileBtn").addEventListener("click", saveProfile);
+    
+    // Close emoji picker when clicking outside
+    window.addEventListener("click", function(event) {
+        const emojiPicker = document.getElementById("emojiPicker");
+        if (emojiPicker && emojiPicker.style.display === "block" && !emojiPicker.contains(event.target) && event.target.id !== "changeImageBtn") {
+            emojiPicker.style.display = "none";
+        }
+    });
 });
 
 function loadEmojis() {
@@ -66,8 +78,16 @@ async function loadUserProfile() {
                 // Default image
                 document.getElementById("profileImage").src = `${emojiBaseURL}1F604.svg`;
             }
+            
+            // Also save to localStorage for redundancy
+            if (userData.photoURL) {
+                localStorage.setItem("user_selectedEmoji", userData.photoURL.split('/').pop().replace('.svg', ''));
+            }
         } else {
             console.log("No user data found!");
+            // Set default values
+            document.getElementById("email").value = email;
+            document.getElementById("profileImage").src = `${emojiBaseURL}1F604.svg`;
         }
     } catch (error) {
         console.error("Error loading profile:", error);
@@ -97,19 +117,24 @@ async function saveProfile() {
     }
     
     try {
-        await setDoc(doc(db, "users", email), {
+        const userData = {
             displayName: displayName,
-            photoURL: selectedEmoji,
+            photoURL: selectedEmoji || `${emojiBaseURL}1F604.svg`,
             updatedAt: new Date().toISOString()
-        }, { merge: true });
+        };
         
-        // Update localStorage
-        localStorage.setItem("app_playerName", displayName);
+        await setDoc(doc(db, "users", email), userData, { merge: true });
         
-        alert("Profile updated successfully!");
+        // Also save the emoji code to localStorage for redundancy
+        if (selectedEmoji) {
+            const emojiCode = selectedEmoji.split('/').pop().replace('.svg', '');
+            localStorage.setItem("user_selectedEmoji", emojiCode);
+        }
+        
+        alert("Profile saved successfully!");
     } catch (error) {
-        console.error("Error updating profile:", error);
-        alert("Error updating profile");
+        console.error("Error saving profile:", error);
+        alert("Error saving profile data");
     }
 }
 
@@ -166,20 +191,27 @@ function displayUserEmoji() {
         // Update UI with stored emoji
         const emojiDisplay = document.getElementById("userEmojiDisplay");
         if (emojiDisplay) {
-            emojiDisplay.src = `https://openmoji.org/data/color/svg/${storedEmoji}.svg`;
+            emojiDisplay.src = `${emojiBaseURL}${storedEmoji}.svg`;
         }
     }
     
     // Then try to get from Firestore (more authoritative)
     const email = localStorage.getItem("app_playerEmail");
     if (email) {
-        loadUserProfile(email).then(profile => {
-            if (profile && profile.selectedEmoji) {
+        const docRef = doc(db, "users", email);
+        getDoc(docRef).then(docSnap => {
+            if (docSnap.exists() && docSnap.data().photoURL) {
                 const emojiDisplay = document.getElementById("userEmojiDisplay");
                 if (emojiDisplay) {
-                    emojiDisplay.src = `https://openmoji.org/data/color/svg/${profile.selectedEmoji}.svg`;
+                    emojiDisplay.src = docSnap.data().photoURL;
                 }
+                
+                // Update localStorage
+                const emojiCode = docSnap.data().photoURL.split('/').pop().replace('.svg', '');
+                localStorage.setItem("user_selectedEmoji", emojiCode);
             }
+        }).catch(error => {
+            console.error("Error getting user profile:", error);
         });
     }
 }
@@ -187,4 +219,72 @@ function displayUserEmoji() {
 // Call this function when the page loads
 document.addEventListener("DOMContentLoaded", function() {
     displayUserEmoji();
-}); 
+});
+
+// Open emoji picker
+function openEmojiPicker() {
+    // Create emoji picker if it doesn't exist
+    let emojiPicker = document.getElementById("emojiPicker");
+    
+    if (!emojiPicker) {
+        emojiPicker = document.createElement("div");
+        emojiPicker.id = "emojiPicker";
+        emojiPicker.className = "emoji-picker";
+        
+        const title = document.createElement("h3");
+        title.textContent = "Select an Emoji";
+        emojiPicker.appendChild(title);
+        
+        const emojiGrid = document.createElement("div");
+        emojiGrid.className = "emoji-grid";
+        
+        // Common emoji codes
+        const emojiCodes = [
+            "1F600", "1F601", "1F602", "1F603", "1F604", "1F605", "1F606", "1F607", 
+            "1F608", "1F609", "1F60A", "1F60B", "1F60C", "1F60D", "1F60E", "1F60F",
+            "1F610", "1F611", "1F612", "1F613", "1F614", "1F615", "1F616", "1F617",
+            "1F618", "1F619", "1F61A", "1F61B", "1F61C", "1F61D", "1F61E", "1F61F",
+            "1F620", "1F621", "1F622", "1F623", "1F624", "1F625", "1F626", "1F627"
+        ];
+        
+        // Create emoji images
+        emojiCodes.forEach(code => {
+            const img = document.createElement("img");
+            img.src = `${emojiBaseURL}${code}.svg`;
+            img.alt = "Emoji";
+            img.dataset.code = code;
+            img.addEventListener("click", function() {
+                selectEmoji(code);
+            });
+            emojiGrid.appendChild(img);
+        });
+        
+        emojiPicker.appendChild(emojiGrid);
+        
+        // Add buttons
+        const buttonsDiv = document.createElement("div");
+        buttonsDiv.className = "emoji-picker-buttons";
+        
+        const closeButton = document.createElement("button");
+        closeButton.textContent = "Close";
+        closeButton.className = "btn btn-secondary";
+        closeButton.addEventListener("click", function() {
+            emojiPicker.style.display = "none";
+        });
+        
+        buttonsDiv.appendChild(closeButton);
+        emojiPicker.appendChild(buttonsDiv);
+        
+        document.body.appendChild(emojiPicker);
+    }
+    
+    // Show emoji picker
+    emojiPicker.style.display = "block";
+}
+
+// Select emoji
+function selectEmoji(code) {
+    selectedEmoji = `${emojiBaseURL}${code}.svg`;
+    document.getElementById("profileImage").src = selectedEmoji;
+    document.getElementById("emojiPicker").style.display = "none";
+} 
